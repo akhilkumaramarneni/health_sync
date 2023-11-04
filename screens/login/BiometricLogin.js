@@ -31,12 +31,21 @@ export default function BiometricLogin() {
                 setLoggedInUserType("patient");
             }
             else {
-                console.log(uniqueId, " and loggined as doctor");
-                setLoggedInUserType("doctor")
+                // console.log(uniqueId, " and loggined as doctor");
+                // setLoggedInUserType("doctor")
+                console.log(uniqueId, " and loggined as patient");
+                setLoggedInUserType("patient")
+                
             }
         });
     })
-
+    
+    const onSignIn = () => {
+        console.log("Sign In clicked");
+        if(userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
+        else navigation.navigate('MainDoctorNavigator');
+        // navigation.navigate('MainPatientNavigator')
+    }
     
     const enableFaceId = () => {
         TouchID.authenticate('to demo this react-native component')
@@ -103,6 +112,7 @@ export default function BiometricLogin() {
                         <TouchableOpacity
                             onPress={() => {
                                 // handle onPress
+                                onSignIn()
                             }}>
                             <View style={styles.btn}>
                                 <Text style={styles.btnText}>Sign in</Text>
