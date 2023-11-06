@@ -41,8 +41,9 @@ export default function BiometricLogin() {
     
     const onSignIn = () => {
         console.log("Sign In clicked");
-        if(userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
-        else navigation.navigate('MainDoctorNavigator');
+        navigation.navigate('MainPatientNavigator');
+        // if(userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
+        // else navigation.navigate('MainDoctorNavigator');
         // navigation.navigate('MainPatientNavigator')
     }
     

@@ -51,5 +51,7 @@
 	</array>
 	<key>NSFaceIDUsageDescription</key>
 	<string>faceid request</string>
+	<key>NSCameraUsageDescription</key>
+	<string>camera access</string>
 </dict>
 </plist>
