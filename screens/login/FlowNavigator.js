@@ -10,6 +10,8 @@ import BiometricLogin from './BiometricLogin';
 import Sessions from './Sessions';
 import Notifications from './Notifications';
 import QRCodeGenerator from './QRCodeGenerator';
+import Session2 from './Sessions2';
+import Tile from './Tile';
 import Scan from './Scan';
 
 
@@ -40,6 +42,8 @@ const MainPatientNavigator = () => {
             <Drawer.Screen name="Sessions" component={Sessions} />
             <Drawer.Screen name="Notifications" component={Notifications} />
             <Drawer.Screen name="QR Code" component={QRCodeGenerator} />
+            <Drawer.Screen name="Session2" component={Session2} />
+            <Drawer.Screen name="Tile" component={Tile} />
         </Drawer.Navigator>
     );
 };
