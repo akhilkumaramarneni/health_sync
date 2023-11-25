@@ -6,6 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,8 +29,14 @@ const heart = require('../../assets/images/H.png');
 const calendar = require('../../assets/images/Calender.png');
 const profile = require('../../assets/images/User.png');
 const plus = require('../../assets/images/Plus.png');
+import { useNavigation } from '@react-navigation/native';
 
-const Sessions = () => {
+const ConsolidatedSessions = () => {
+  const navigation = useNavigation();
+
+  navigateToAllSessions = ()=>{
+    navigation.navigate('SessionsPreviousHistory');
+  }
   return (
     <>
       <ScrollView style={styles.container}>
@@ -51,6 +58,7 @@ const Sessions = () => {
               alignItems: 'center',
             }}>
             <Label>Previous Sessions</Label>
+            <TouchableOpacity onPress={()=>navigateToAllSessions()}>
             <Text
               style={{
                 fontFamily: 'Poppins-Regular',
@@ -59,6 +67,7 @@ const Sessions = () => {
               }}>
               View All
             </Text>
+            </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row', marginBottom:20}}>
             {data.map((item, index) => (
@@ -80,7 +89,7 @@ const Sessions = () => {
   );
 };
 
-export default Sessions;
+export default ConsolidatedSessions;
 
 const BottomTab = () => (
   <View

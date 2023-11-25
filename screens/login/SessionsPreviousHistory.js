@@ -1,7 +1,7 @@
 // Import necessary React Native components
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import ListView from '../login/components/ListView';
+import ListView from './components/ListView';
 import { useNavigation } from '@react-navigation/native';
 
 // Dummy data for patient sessions (replace this with your actual data)
@@ -37,14 +37,13 @@ const patientSessions = [
 ];
 
 // Define the PatientHistorySessions component
-const Sessions2 = () => {
+const SessionsPreviousHistory = () => {
 
     const navigation = useNavigation();
 
     viewItem = item => {
         console.log("navigate to tile page for patient")
-       
-        navigation.navigate('Tile');
+        navigation.navigate('SessionInfo');
         // this.props.navigation.navigate('FoodDetails', {
         //   item,
         // });
@@ -86,4 +85,4 @@ const styles = StyleSheet.create({
 });
 
 // Export the component
-export default Sessions2;
+export default SessionsPreviousHistory;

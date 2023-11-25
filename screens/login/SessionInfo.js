@@ -42,7 +42,7 @@ const patientSessions = [
 ];
 
 // Define the PatientHistorySessions component
-const Tile = () => {
+const SessionInfo = () => {
 
     const navigation = useNavigation();
 
@@ -78,6 +78,9 @@ const Tile = () => {
 
   return (
     <View style={styles.container}>
+        <View style={{backgroundColor:'pink', flex: 0.5}}>
+           <Text> Summary + transcipts | audio show</Text>
+        </View>
       <FlatList
         data={patientSessions}
         numColumns={2}
@@ -98,4 +101,4 @@ const styles = StyleSheet.create({
 });
 
 // Export the component
-export default Tile;
+export default SessionInfo;
