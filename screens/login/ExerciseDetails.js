@@ -24,14 +24,14 @@ const ExerciseDetails = ({ route }) => {
       id: '1',
       name: 'Stretching',
       description: 'Stretch your body',
-      duration: '10 minutes',
+      duration: '10 minutes/day',
       videoURL: require('../../assets/videos/stretching.mp4'),
     },
     {
       id: '2',
-      name: 'Aerobics',
+      name: 'Cycling',
       description: 'Improve cardiovascular health',
-      duration: '20 minutes',
+      duration: '30 minutes/day',
       videoURL: require('../../assets/videos/cycling.mp4'),
     },
     // Add more exercise items as needed
