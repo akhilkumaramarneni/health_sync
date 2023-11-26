@@ -47,10 +47,12 @@ const SessionInfo = () => {
 
     const navigation = useNavigation();
 
-    viewItem = role => {
-        console.log("navigate to food details page for patient")
+    const viewItem = (item) => {
+        console.log("navigate to details page for patient", item)
        
-        navigation.navigate('FoodDetails');
+        if(item.type === 'Food') navigation.navigate('FoodDetails');
+        else if(item.type === 'Medicines') navigation.navigate('MedicineDetails');
+        else if(item.type === 'Exercise') navigation.navigate('ExerciseDetails');
         
         // this.props.navigation.navigate('FoodDetails', {
         //   item,
@@ -64,7 +66,7 @@ const SessionInfo = () => {
     renderSessionItem = ({item}) => {
         return (
             <View style={{flex:1}}>
-             <TouchableOpacity onPress={this.viewItem} underlayColor="white">
+             <TouchableOpacity onPress={() => viewItem(item)} underlayColor="white">
              <View style = {{flexDirection:'row', marginTop:30, marginLeft:10}}>
                <Image style = {{backgroundColor:'red', width:100, height:100}} source={yoga} />
                <View style = {{backgroundColor:'green', flex:0.9, justifyContent:'space-between'}}>

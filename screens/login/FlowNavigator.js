@@ -14,6 +14,7 @@ import SessionsPreviousHistory from './SessionsPreviousHistory';
 import SessionInfo from './SessionInfo';
 import Scan from './Scan';
 import FoodDetails from './FoodDetails';
+import ExerciseDetails from './ExerciseDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -48,6 +49,7 @@ const MainPatientNavigator = () => {
             options={{ drawerLabel: () => null, title: 'History' }} />
             <Drawer.Screen name="SessionInfo" component={SessionInfo} options={{ drawerLabel: () => null, title :"Session Info" }} />
             <Drawer.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'patient' }}/>
+            <Drawer.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'patient' }}/>
         </Drawer.Navigator>
     );
 };
@@ -58,6 +60,8 @@ const MainDoctorNavigator = () => {
             <Drawer.Screen name="Scan" component={Scan} />
             <Drawer.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
              options={{title: 'History' }} />
+            <Drawer.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'doctor' }}/>
+            <Drawer.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'doctor' }}/>
         </Tab.Navigator>
     );
 };
