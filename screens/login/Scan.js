@@ -15,10 +15,10 @@ const Scan = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      {/* <QRCodeScanner
+      <QRCodeScanner
         onRead={handleScan}
         showMarker
-      /> */}
+      />
       <Button title="Close Scanner" onPress={() => navigation.goBack()} />
     </View>
   );

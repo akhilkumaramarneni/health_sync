@@ -13,7 +13,8 @@ import QRCodeGenerator from './QRCodeGenerator';
 import SessionsPreviousHistory from './SessionsPreviousHistory';
 import SessionInfo from './SessionInfo';
 import Scan from './Scan';
-
+import NewSession from './NewSession';
+import CartScreen from './CartScreen'
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,14 +51,38 @@ const MainPatientNavigator = () => {
     );
 };
 
-const MainDoctorNavigator = () => {
+function SessionsStackNavigator() {
     return (
-        <Tab.Navigator initialRouteName="MainDoctorNavigator" >
-            <Drawer.Screen name="Scan" component={Scan} />
-            <Drawer.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
-             options={{title: 'History' }} />
-        </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen 
+          name="SessionsPreviousHistory" 
+          component={SessionsPreviousHistory} 
+        />
+        <Stack.Screen 
+          name="New Session" 
+          component={NewSession} 
+        />
+        <Stack.Screen 
+          name="Cart" 
+          component={CartScreen} 
+        />
+        {/* Add other screens in the Sessions stack if needed */}
+      </Stack.Navigator>
     );
-};
+  }
+  
+  const MainDoctorNavigator = () => {
+    return (
+      <Tab.Navigator initialRouteName="MainDoctorNavigator">
+        <Tab.Screen name="Scan" component={Scan} />
+        <Tab.Screen 
+          name="SessionsPreviousHistory" 
+          component={SessionsStackNavigator} 
+          options={{ title: 'History' }} 
+        />
+        {/* Add other tabs as needed */}
+      </Tab.Navigator>
+    );
+  };
 
 export default FlowNavigator;
