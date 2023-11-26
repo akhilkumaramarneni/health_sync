@@ -26,16 +26,16 @@ export default function BiometricLogin() {
         getUniqueId().then((uniqueId) => {
             // iOS: "FCDBD8EF-62FC-4ECB-B2F5-92C9E79AC7F9"
             // Android: "dd96dec43fb81c97"
-            if (uniqueId == "EB49497A-CCE9-44C9-BD28-75F2E33048A7" || uniqueId == "193c6a5a8fe2ce9e") {
+            // if (uniqueId == "EB49497A-CCE9-44C9-BD28-75F2E33048A7" || uniqueId == "193c6a5a8fe2ce9e") {
                 console.log(uniqueId, " and loggined as patient");
                 setLoggedInUserType("patient");
                 setLoggedInUserName('Mr. Akhil')
-            }
-            else {
-                console.log(uniqueId, " and loggined as doctor");
-                setLoggedInUserType("doctor")
-                setLoggedInUserName('Dr. Akhil')
-            }
+            // }
+            // else {
+                // console.log(uniqueId, " and loggined as doctor");
+                // setLoggedInUserType("doctor")
+                // setLoggedInUserName('Dr. Akhil')
+            // }
         });
     })
     

@@ -13,6 +13,7 @@ import QRCodeGenerator from './QRCodeGenerator';
 import SessionsPreviousHistory from './SessionsPreviousHistory';
 import SessionInfo from './SessionInfo';
 import Scan from './Scan';
+import FoodDetails from './FoodDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,7 @@ const MainPatientNavigator = () => {
             <Drawer.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
             options={{ drawerLabel: () => null, title: 'History' }} />
             <Drawer.Screen name="SessionInfo" component={SessionInfo} options={{ drawerLabel: () => null, title :"Session Info" }} />
+            <Drawer.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'patient' }}/>
         </Drawer.Navigator>
     );
 };

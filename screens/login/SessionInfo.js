@@ -1,7 +1,8 @@
 // Import necessary React Native components
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import ListView from '../login/components/ListView';
 const yoga = require('../../assets/images/yoga.png');
 
 // Dummy data for patient sessions (replace this with your actual data)
@@ -46,10 +47,11 @@ const SessionInfo = () => {
 
     const navigation = useNavigation();
 
-    viewItem = item => {
-        console.log("navigate to tile page for patient")
+    viewItem = role => {
+        console.log("navigate to food details page for patient")
        
-        navigation.navigate('Tile');
+        navigation.navigate('FoodDetails');
+        
         // this.props.navigation.navigate('FoodDetails', {
         //   item,
         // });
@@ -62,15 +64,15 @@ const SessionInfo = () => {
     renderSessionItem = ({item}) => {
         return (
             <View style={{flex:1}}>
-             
+             <TouchableOpacity onPress={this.viewItem} underlayColor="white">
              <View style = {{flexDirection:'row', marginTop:30, marginLeft:10}}>
                <Image style = {{backgroundColor:'red', width:100, height:100}} source={yoga} />
                <View style = {{backgroundColor:'green', flex:0.9, justifyContent:'space-between'}}>
                   <Text>{item.type}</Text>
                   <Text>{item.description}</Text>
                </View>
-
              </View>
+             </TouchableOpacity>
 
             </View>
         )
