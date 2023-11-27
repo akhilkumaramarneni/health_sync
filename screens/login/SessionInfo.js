@@ -43,16 +43,22 @@ const patientSessions = [
 ];
 
 // Define the PatientHistorySessions component
-const SessionInfo = () => {
+const SessionInfo = ({route}) => {
+
+  const {data} = route.params; 
+
+  console.log("----------------------------------------");
+  const prettyJson = JSON.stringify(data, null, 2);
+  console.log(prettyJson);
 
     const navigation = useNavigation();
 
     const viewItem = (item) => {
         console.log("navigate to details page for patient", item)
        
-        if(item.type === 'Food') navigation.navigate('FoodDetails');
-        else if(item.type === 'Medicines') navigation.navigate('MedicineDetails');
-        else if(item.type === 'Exercise') navigation.navigate('ExerciseDetails');
+        if(item.type === 'Food') navigation.navigate('FoodDetails', { data: item });
+        else if(item.type === 'Medicines') navigation.navigate('MedicineDetails',{ data: item });
+        else if(item.type === 'Exercise') navigation.navigate('ExerciseDetails',{ data: item });
         
         // this.props.navigation.navigate('FoodDetails', {
         //   item,

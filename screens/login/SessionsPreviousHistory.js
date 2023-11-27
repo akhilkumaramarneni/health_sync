@@ -1,6 +1,6 @@
 // Import necessary React Native components
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import ListView from './components/ListView';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../store/AuthContext';
@@ -40,8 +40,14 @@ const patientSessions = [
 // Define the PatientHistorySessions component
 const SessionsPreviousHistory = () => {
 
+
     const navigation = useNavigation();
-    const { setLoggedInUserType, userType, setLoggedInUserName } = useAuth();
+    //const { setLoggedInUserType, userType, setLoggedInUserName, } = useAuth();
+    const { setLoggedInUserType, userType, setLoggedInUserName, setAllSessionsData,  allSessionsData} = useAuth();
+console.log("hello data")
+const prettyJson = JSON.stringify(allSessionsData, null, 2);
+console.log(prettyJson);
+//console.log(allSessionsData)
 
     viewItem = item => {
         console.log("navigate to tile page for patient")
@@ -50,6 +56,46 @@ const SessionsPreviousHistory = () => {
         //   item,
         // });
       };
+      const renderItem = ({ item }) => (
+        <View style={{ marginBottom: 10, padding: 10, backgroundColor: '#f0f0f0' }}>
+          <Text>Doctor: {item.doctor}</Text>
+          <Text>Visit Date: {item.visitTime}</Text>
+          <Text>Simple Tiles: {item.simpletiles.join(', ')}</Text>
+        </View>
+      );
+
+      const renderItemNew = ({ item }) => (
+        <View style={stylesNew.itemContainer}>
+          <View style={stylesNew.item}>
+            <Text style={stylesNew.text}>Doctor: {item.doctor}</Text>
+            <Text style={stylesNew.text}>Visit Date: {item.visitTime}</Text>
+            <Text style={stylesNew.text}>Simple Tiles: {item.simpletiles.join(', ')}</Text>
+          </View>
+        </View>
+      );
+      const renderItemNavigate = ({ item, navigation }) => (
+        <TouchableOpacity
+          style={stylesNew.itemContainer}
+          onPress={() => navigation.navigate('SessionInfo', { data: item })}
+        >
+          <View style={stylesNew.item}>
+            <Text style={stylesNew.text}>Doctor: {item.doctor}</Text>
+            <Text style={stylesNew.text}>Visit Date: {new Date(item.visitTime).toLocaleDateString('en-US',{year: 'numeric', month: '2-digit', day:'2-digit'})}</Text>
+            <Text style={stylesNew.text}>Disease: {item.disease}</Text>
+
+
+
+      
+            <Text style={stylesNew.text}>Diagnose: {item.simpletiles.join('\n')}</Text>
+            <TouchableOpacity
+        style={stylesNew.button}
+        onPress={() => navigation.navigate('SessionInfo', { data: item })}
+      >
+        <Text style={styles.buttonText}>View</Text>
+      </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      );
 
     renderSessionItem = ({item}) => {
         return <ListView item={item} viewItem={this.viewItem} />;
@@ -59,9 +105,9 @@ const SessionsPreviousHistory = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Patient History Sessions</Text>
       <FlatList
-        data={patientSessions}
-        keyExtractor={(item) => item.id}
-        renderItem={renderSessionItem}
+        data={allSessionsData}
+        keyExtractor={(item,index) => index.toString()}
+        renderItem={(item)=>renderItemNavigate({ ...item, navigation })}
       />
       {userType === ROLES.DOCTOR && (
         <View style={styles.buttonContainer}>
@@ -73,7 +119,62 @@ const SessionsPreviousHistory = () => {
       )}
     </View>
   );
+
+  // return (
+  //   <View style={styles.container}>
+  //     <Text style={styles.title}>Patient History Sessions</Text>
+  //     <FlatList
+  //       data={patientSessions}
+  //       keyExtractor={(item) => item.id}
+  //       renderItem={renderSessionItem}
+  //     />
+  //     {userType === ROLES.DOCTOR && (
+  //       <View style={styles.buttonContainer}>
+  //         <Button
+  //           title="Create New Session"
+  //           onPress={() =>  navigation.navigate('New Session')}
+  //         />
+  //       </View>
+  //     )}
+  //   </View>
+  // );
 };
+const stylesNew = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#ecf0f1', // Background color for the entire screen
+  },
+  itemContainer: {
+    marginBottom: 10,
+    borderRadius: 10,
+    backgroundColor: '#003087',
+    overflow: 'hidden', // Ensure rounded corners are applied
+  },
+  item: {
+    padding: 15,
+    backgroundColor: '#3498db', // Background color for each tile
+    borderRadius: 10,
+  },
+  button: {
+    backgroundColor: '#32a85f',
+    //'#2ecc71',
+    borderRadius: 5,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginLeft: 'auto'
+  },
+  buttonText: {
+    color: '#fff',
+    
+  },
+  text: {
+    color: '#fff', // Text color
+    marginBottom: 5,
+  },
+});
 
 // Styles
 const styles = StyleSheet.create({
