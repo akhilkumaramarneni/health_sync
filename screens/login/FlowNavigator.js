@@ -101,6 +101,9 @@ function DoctorSessionsStackNavigator() {
           component={DoctorSessionsStackNavigator} 
           options={{ title: 'History' }} 
         />
+        <Tab.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'doctor' }}/>
+        <Tab.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'doctor' }}/>
+        <Tab.Screen name="MedicineDetails" component={MedicineDetails} options={{ drawerLabel: () => null, title :"Medicine Details" }} initialParams={{ role: 'doctor' }}/>
         {/* Add other tabs as needed */}
       </Tab.Navigator>
     );

@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
 const yoga = require('../../assets/images/yoga.png');
+import { saveDetails } from '../../store/Details';
+import Modal from 'react-native-modal';
 
 const FoodDetails = ({ route }) => {
+
     const { role, patientId } = route.params;
+    const { data } = route.params;
+
     const [foodsToEat, setFoodsToEat] = useState([]);
     const [foodsNotToEat, setFoodsNotToEat] = useState([]);
     const [newFoodName, setNewFoodName] = useState('');
@@ -12,135 +17,176 @@ const FoodDetails = ({ route }) => {
     const [editable, setEditable] = useState(false);
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [doubleClickedItem, setDoubleClickedItem] = useState(null);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     useEffect(() => {
-        if (role === 'patient') {
-          // Load initial dummy tiles for patients
-          const initialDummyToEat = [
-            { id: 'p1', name: 'Vegetables', image: yoga, description: 'Vitamins & fiber', examples: 'Broccoli, Spinach' },
-            { id: 'p2', name: 'Whole grains', image: yoga, description: 'Rich in fiber', examples: 'Brown rice, Quinoa' },
-            { id: 'p7', name: 'Fruits', image: yoga, description: 'Natural sugars', examples: 'Apples, Bananas' },
-            { id: 'p8', name: 'Lean proteins', image: yoga, description: 'Muscle growth', examples: 'Chicken, Fish' },
-          ];
+        if (data && data.complextiles && data.complextiles.length > 0) {
+          const foodTiles = data.complextiles.find(tile => tile.type === 'food');
     
-          const initialDummyNotToEat = [
-            { id: 'p3', name: 'Sugary drinks', image: yoga, description: 'High sugar content', examples: 'Soda, Juices' },
-            { id: 'p4', name: 'Processed foods', image: yoga, description: 'High in additives', examples: 'Fast food, Snacks' },
-            { id: 'p5', name: 'High-fat foods', image: yoga, description: 'Cholestrol increase', examples: 'Fried foods' },
-            { id: 'p6', name: 'Sodium-rich foods', image: yoga, description: 'May increase BP', examples: 'Canned soups' },
-          ];
+          if (foodTiles && foodTiles.todo && foodTiles.todo.length > 0) {
+            const toEat = foodTiles.todo.map(food => ({
+              id: Math.random().toString(),
+              name: food.type,
+              description: food.description,
+              examples: food.suggestions.join(', '),
+              image: yoga, // Assuming this is the default image
+            }));
+            setFoodsToEat(toEat);
+          }
     
-          setFoodsToEat(initialDummyToEat);
-          setFoodsNotToEat(initialDummyNotToEat);
-        } else if (role === 'doctor') {
-          // Retrieve previously selected tiles for the patient (Replace this logic with your actual implementation)
-          const prevSelectedTilesToEat = [
-            // Assuming retrieved data for the doctor is in this format
-            { id: 'd1', name: 'Vegetables', image: yoga, description: 'Vitamins & fiber', examples: 'Broccoli, Spinach' },
-            { id: 'd2', name: 'Whole grains', image: yoga, description: 'Rich in fiber', examples: 'Brown rice, Quinoa' },
-            { id: 'd7', name: 'Fruits', image: yoga, description: 'Natural sugars', examples: 'Apples, Bananas' },
-            { id: 'd8', name: 'Lean proteins', image: yoga, description: 'Muscle growth', examples: 'Chicken, Fish' },
-          ];
-    
-          const prevSelectedTilesNotToEat = [
-            // Assuming retrieved data for the doctor is in this format
-            { id: 'd3', name: 'Sugary drinks', image: yoga, description: 'High sugar content', examples: 'Soda, Juices' },
-            { id: 'd4', name: 'Processed foods', image: yoga, description: 'High in additives', examples: 'Fast food, Snacks' },
-            { id: 'd5', name: 'High-fat foods', image: yoga, description: 'Contribute to health issues', examples: 'Fried foods, Creamy sauces' },
-            { id: 'd6', name: 'Sodium-rich foods', image: yoga, description: 'May increase blood pressure', examples: 'Canned soups, Processed meats' },
-          ];
-    
-          setFoodsToEat(prevSelectedTilesToEat);
-          setFoodsNotToEat(prevSelectedTilesNotToEat);
+          if (foodTiles && foodTiles.notTodos && foodTiles.notTodos.length > 0) {
+            const notToEat = foodTiles.notTodos.map(food => ({
+              id: Math.random().toString(),
+              name: food.type,
+              description: food.description,
+              examples: food.suggestions.join(', '),
+              image: yoga, // Assuming this is the default image
+            }));
+            setFoodsNotToEat(notToEat);
+          }
         }
-      }, [role, patientId]);
+    }, [data]);
   
     const handleAddNewFood = (toEat) => {
-      if (newFoodName && newFoodDescription && newFoodExamples) {
-        const newFood = {
-          id: Math.random().toString(),
-          name: newFoodName,
-          description: newFoodDescription,
-          examples: newFoodExamples,
-          image: yoga, // Assuming this is the default image
-        };
-  
-        if (toEat) {
-          setFoodsToEat([...foodsToEat, newFood]);
-        } else {
-          setFoodsNotToEat([...foodsNotToEat, newFood]);
+        if (newFoodName && newFoodDescription && newFoodExamples) {
+          const newFood = {
+            id: Math.random().toString(),
+            name: newFoodName,
+            description: newFoodDescription,
+            examples: newFoodExamples,
+            image: yoga, // Assuming this is the default image
+          };
+    
+          if (toEat) {
+            setFoodsToEat([...foodsToEat, newFood]);
+          } else {
+            setFoodsNotToEat([...foodsNotToEat, newFood]);
+          }
+    
+          setNewFoodName('');
+          setNewFoodDescription('');
+          setNewFoodExamples('');
+    
+          // Call function to store updated data
+          storeUpdatedData();
         }
-  
-        setNewFoodName('');
-        setNewFoodDescription('');
-        setNewFoodExamples('');
-      }
     };
+      
 
-    const handleDoubleClick = (id) => {
-        if (id === doubleClickedItem) {
-          setDoubleClickedItem(null);
-        } else {
-          setDoubleClickedItem(id);
+    const handleDoubleClick = (id, toEat) => {
+        if (id) {
+            if (!toEat && doubleClickedItem === id) {
+              const updatedFoodsNotToEat = foodsNotToEat.filter(item => item.id !== id);
+              setFoodsNotToEat(updatedFoodsNotToEat);
+              setDoubleClickedItem(null); // Reset double-clicked item after deletion
+              // Call function to store updated data
+              storeUpdatedData();
+            } else {
+              setDoubleClickedItem(id);
+            }
         }
     };
     
-    const handleDelete = (id, toEat) => {
-        // Logic to delete the item with the provided ID
+    const handleDelete = (id, toEat) => { // Receive id as a parameter
         if (toEat) {
-          const updatedFoodsToEat = foodsToEat.filter(item => item.id !== id);
+          const updatedFoodsToEat = foodsToEat.filter(item => item.id !== id); // Use id for comparison
           setFoodsToEat(updatedFoodsToEat);
         } else {
-          const updatedFoodsNotToEat = foodsNotToEat.filter(item => item.id !== id);
+          const updatedFoodsNotToEat = foodsNotToEat.filter(item => item.id !== id); // Use id for comparison
           setFoodsNotToEat(updatedFoodsNotToEat);
         }
-        setDoubleClickedItem(null); // Reset double-clicked item after deletion
+        // Call function to store updated data
+        storeUpdatedData();
     };
 
-      const renderFoodItem = ({ item }) => (
-        <TouchableOpacity
-      style={styles.foodCard}
-      onPress={() => handleDoubleClick(item.id)}
-    >
-      <Image source={item.image} style={styles.foodImage} />
-      <Text style={styles.foodName}>{item.name}</Text>
-      <Text style={styles.foodDescription}>{item.description}</Text>
-      <Text style={styles.foodExamples}>{item.examples}</Text>
+    const storeUpdatedData = () => {
+        const updatedFoodTiles = {
+          type: 'food',
+          todo: foodsToEat.map(food => ({
+            type: food.name,
+            description: food.description,
+            suggestions: food.examples.split(',').map(example => example.trim())
+          })),
+          notTodo: foodsNotToEat.map(food => ({
+            type: food.name,
+            description: food.description,
+            suggestions: food.examples.split(',').map(example => example.trim())
+          }))
+        };
+    
+        // Update the data with the modified food tiles
+        const updatedData = { ...data }; // Assuming 'data' is available in the component
+        if (updatedData.complextiles) {
+          const foodTileIndex = updatedData.complextiles.findIndex(tile => tile.type === 'food');
+          if (foodTileIndex !== -1) {
+            updatedData.complextiles[foodTileIndex].todo = updatedFoodTiles.todo;
+            updatedData.complextiles[foodTileIndex].notTodo = updatedFoodTiles.notTodo;
+          }
+        }
 
-      {doubleClickedItem === item.id && (
-        <View style={styles.deleteContainer}>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => handleDelete(item.id, true)}
-          >
-            <Text style={styles.deleteButtonText}>Delete</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </TouchableOpacity>
-  );
+        // Call function to save or process the updated data (e.g., send to an API)
+        saveDetails(updatedData.complextiles);
+    };
+
+    const submitDetails = () => {
+        storeUpdatedData();
+        setShowSuccessMessage(true);
+
+        // Hide the modal after 1 second
+        setTimeout(() => {
+            setShowSuccessMessage(false);
+        }, 900);
+      };
+
+    const renderFoodItem = ( item , toEat) => {
+        if (!item) {
+            return null; // Handle the case where item is undefined/null
+        }
+        
+        return (
+            <TouchableOpacity
+                style={styles.foodCard}
+                onPress={() => handleDoubleClick(item.id)}
+            >
+            <Image source={item.image} style={styles.foodImage} />
+            <Text style={styles.foodName}>{item.name}</Text>
+            <Text style={styles.foodDescription}>{item.description}</Text>
+            <Text style={styles.foodExamples}>{item.examples}</Text>
+
+            {doubleClickedItem === item.id && (
+                <View style={styles.deleteContainer}>
+                    <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={() => handleDelete(item.id, toEat)} // Passing item.id here
+                    >
+                    <Text style={styles.deleteButtonText}>Delete</Text>
+                    </TouchableOpacity>
+                </View>
+                )}
+            </TouchableOpacity>
+        );
+    };
 
     
   
-    const renderFoodList = (foods) => (
-      <FlatList
+    const renderFoodList = (foods, toEat) => (
+        <FlatList
         horizontal
         data={foods}
         keyExtractor={(item) => item.id}
-        onLongPress={() => role === 'doctor' && handleDelete(item.id, false)}
-        renderItem={renderFoodItem}
-        showsHorizontalScrollIndicator={false}
-      />
+        renderItem={({ item }) => renderFoodItem(item, toEat)} // Pass 'toEat' variable to renderFoodItem
+        showsHorizontalScrollIndicator={true}
+        />
     );
   
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.imageContainer}>
+        {/* <View style={styles.imageContainer}>
           <Image source={require('../../assets/images/fooddetails.png')} style={styles.image} />
-        </View>
+        </View> */}
   
         {role === 'doctor' && (
-          <View style={styles.inputContainer}>
+          <View style={styles.formContainer}>
             <TextInput
               style={styles.input}
               placeholder="Enter food name"
@@ -160,40 +206,45 @@ const FoodDetails = ({ route }) => {
               onChangeText={setNewFoodExamples}
             />
             <TouchableOpacity
-              style={[styles.addButton, { backgroundColor: '#4CAF50' }]}
+              style={[styles.editButton, { backgroundColor: '#4CAF50' }]}
               onPress={() => handleAddNewFood(true)}
             >
               <Text style={styles.addButtonText}>Add New Food to Eat</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.addButton, { backgroundColor: '#FF5722' }]}
+              style={[styles.editButton, { backgroundColor: '#FF5722' }]}
               onPress={() => handleAddNewFood(false)}
             >
               <Text style={styles.addButtonText}>Add New Food Not to Eat</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={() => setEditable(!editable)}
-            >
-              <Text style={styles.editButtonText}>
-                {editable ? 'Done Editing' : 'Edit Foods'}
-              </Text>
-            </TouchableOpacity>
+            {role === 'doctor' && (
+                <TouchableOpacity
+                style={[styles.editButton, { backgroundColor: '#007AFF' }]}
+                onPress={submitDetails}
+                >
+                <Text style={styles.editButtonText}>Submit Details</Text>
+                </TouchableOpacity>
+            )}
+            <Modal isVisible={showSuccessMessage} style={styles.modal}>
+                <View style={styles.successMessage}>
+                    <Text style={styles.successText}>Food Details successfully submitted!</Text>
+                </View>
+            </Modal>
           </View>
         )}
   
         <Text style={styles.sectionHeading}>What to Eat</Text>
-        {renderFoodList(foodsToEat)}
+        {renderFoodList(foodsToEat, true)}
   
         <Text style={styles.sectionHeading}>What Not to Eat</Text>
-        {renderFoodList(foodsNotToEat)}
+        {renderFoodList(foodsNotToEat, false)}
       </ScrollView>
     );
-  };
+};
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 0.5,
+    flexGrow: 0.3,
     backgroundColor: '#ffffff',
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -258,17 +309,63 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
   },
-
+  input: {
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    fontWeight: 'bold',
+    borderColor: '#CCCCCC',
+  },
+  formContainer: {
+    marginBottom: 10,
+    padding: 5,
+    borderRadius: 10,
+    backgroundColor: '#F8DCE1',
+  },
+  editButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  editButton: {
+    marginBottom: 0.1,
+    padding: 4,
+    borderRadius: 10,
+    backgroundColor: '#007AFF',
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
   deleteButton: {
     backgroundColor: 'red',
     padding: 5,
     borderRadius: 5,
   },
-
   deleteButtonText: {
     color: 'white',
     fontWeight: 'bold',
   },
+  successMessage: {
+    marginTop: 15,
+    padding: 15,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 128, 0, 0.7)', // Adjust the color here (black with some opacity)
+    paddingVertical: 10,
+    marginBottom: 100, // Adjust this value to position the modal above the button
+},
+successText: {
+    color: '#ffffff', // Change the text color to white
+    fontSize: 16,
+    fontWeight: 'bold',
+},
+  modal: {
+    justifyContent: 'center',
+    margin: 0,
+},
 });
 
 export default FoodDetails;

@@ -1,27 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
 const yoga = require('../../assets/images/yoga.png');
+import { saveDetails } from '../../store/Details';
+import Modal from 'react-native-modal';
 
 const MedicineDetails = ({ route }) => {
     const { role } = route.params;
-  
-    const [medicines, setMedicines] = useState([
-      {
-        id: '1',
-        name: 'Tylenol 500 mg',
-        description: 'Treat minor aches, and reduces fever',
-        dosage: 'Twice a day',
-        image: yoga,
-      },
-      {
-        id: '2',
-        name: 'Azithromycin 250 mg',
-        description: 'Treat bacterial infections',
-        dosage: 'Once a day',
-        image: yoga,
-      },
-      // Add more medicine items as needed
-    ]);
+    const { data } = route.params;
+    const [medicines, setMedicines] = useState([]);
+    const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+
+    useEffect(() => {
+        if (data && data.complextiles && data.complextiles.length > 0) {
+        const medicineTiles = data.complextiles.find(tile => tile.type === 'medicine');
+
+        if (medicineTiles && medicineTiles.todo && medicineTiles.todo.length > 0) {
+            const parsedMedicines = medicineTiles.todo.map(medicine => ({
+            id: Math.random().toString(36).substring(7),
+            name: medicine.type,
+            description: medicine.description,
+            dosage: medicine.description, // Assuming description in JSON is dosage in code
+            image: require('../../assets/images/yoga.png'), // You can replace this with actual images
+            }));
+            setMedicines(parsedMedicines);
+        }
+        }
+    }, [data]);
   
     const [newMedicineName, setNewMedicineName] = useState('');
     const [newMedicineDescription, setNewMedicineDescription] = useState('');
@@ -47,7 +51,7 @@ const MedicineDetails = ({ route }) => {
           </View>
           {role === 'doctor' && (
             <TouchableOpacity style={styles.deleteButton} onPress={() => deleteMedicine(item.id)}>
-              <Text style={styles.deleteButtonText}>Delete</Text>
+              <Text style={styles.deleteButtonText}>Remove</Text>
             </TouchableOpacity>
           )}
         </TouchableOpacity>
@@ -67,57 +71,118 @@ const MedicineDetails = ({ route }) => {
       setNewMedicineDescription('');
       setNewMedicineDosage('');
       setNewMedicineImage('');
+
+      saveUpdatedData();
     };
   
     const deleteMedicine = (id) => {
       const updatedMedicines = medicines.filter((medicine) => medicine.id !== id);
       setMedicines(updatedMedicines);
+
+      saveUpdatedData();
+    };
+
+    const saveUpdatedData = () => {
+        const updatedMedicineTiles = {
+          type: 'medicine',
+          todo: medicines.map(medicine => ({
+            type: medicine.name, // Assuming 'name' is equivalent to 'type' in JSON
+            description: medicine.description,
+          })),
+        };
+      
+        const updatedData = { ...data }; // Copy existing data
+        let foundIndex = -1;
+        updatedData.complextiles.forEach((tile, index) => {
+          if (tile.type === 'medicine') {
+            foundIndex = index;
+          }
+        });
+      
+        if (foundIndex !== -1) {
+          updatedData.complextiles[foundIndex].todo = updatedMedicineTiles.todo;
+        } else {
+          updatedData.complextiles.push(updatedMedicineTiles);
+        }
+      
+        // Call saveDetails function to store the updated data
+        saveDetails(updatedData.complextiles);
+    };
+
+    const submitDetails = () => {
+        // Logic to prepare the updated data
+        // Assuming saveUpdatedData function is present
+      
+        // Call the saveUpdatedData function
+        saveUpdatedData();
+        // Show success message
+        setIsSuccessModalVisible(true);
+
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+            setIsSuccessModalVisible(false);
+        }, 800);
     };
   
     return (
-      <ScrollView contentContainerStyle={styles.container}>
-        {role === 'doctor' && (
-          <View style={styles.formContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Medicine Name"
-              value={newMedicineName}
-              onChangeText={setNewMedicineName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Medicine Description"
-              value={newMedicineDescription}
-              onChangeText={setNewMedicineDescription}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Dosage"
-              value={newMedicineDosage}
-              onChangeText={setNewMedicineDosage}
-            />
-            {/* <TextInput
-              style={styles.input}
-              placeholder="Image URL"
-              value={newMedicineImage}
-              onChangeText={setNewMedicineImage}
-            /> */}
-            <TouchableOpacity style={styles.addButton} onPress={addNewMedicine}>
-              <Text style={styles.addButtonText}>Add Medicine</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        {renderMedicineItems}
-      </ScrollView>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.container}>
+                {role === 'doctor' && (
+                <View style={styles.formContainer}>
+                    <TextInput
+                    style={styles.input}
+                    placeholder="Medicine Name"
+                    value={newMedicineName}
+                    onChangeText={setNewMedicineName}
+                    />
+                    <TextInput
+                    style={styles.input}
+                    placeholder="Medicine Description"
+                    value={newMedicineDescription}
+                    onChangeText={setNewMedicineDescription}
+                    />
+                    <TextInput
+                    style={styles.input}
+                    placeholder="Dosage"
+                    value={newMedicineDosage}
+                    onChangeText={setNewMedicineDosage}
+                    />
+                    {/* <TextInput
+                    style={styles.input}
+                    placeholder="Image URL"
+                    value={newMedicineImage}
+                    onChangeText={setNewMedicineImage}
+                    /> */}
+                    <TouchableOpacity style={styles.addButton} onPress={addNewMedicine}>
+                    <Text style={styles.addButtonText}>Add Medicine</Text>
+                    </TouchableOpacity>
+                </View>
+                )}
+                {renderMedicineItems}
+            </ScrollView>
+            {role === 'doctor' && (
+                <TouchableOpacity style={styles.submitButtonContainer} onPress={submitDetails}>
+                <Text style={styles.submitButtonText}>Submit Details</Text>
+                </TouchableOpacity>
+            )}
+
+            <Modal isVisible={isSuccessModalVisible} style={styles.modal}>
+                <View style={styles.successMessage}>
+                <Text style={styles.successText}>Medicine Details successfully submitted</Text>
+                </View>
+            </Modal>
+    </View>
     );
   };
   
   const styles = StyleSheet.create({
     container: {
-      flexGrow: 1,
-      backgroundColor: '#ffffff',
-      paddingVertical: 20,
-      paddingHorizontal: 10,
+        flex: 1,
+        backgroundColor: '#ffffff',
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        paddingBottom: 80, // Adjust this value to ensure content scrolls above the button
     },
     formContainer: {
       marginBottom: 20,
@@ -183,6 +248,48 @@ const MedicineDetails = ({ route }) => {
         height: 100,
         borderRadius: 10,
         marginRight: 10,
+    },
+    submitButton: {
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
+        backgroundColor: '#007AFF',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+    },
+    submitButtonContainer: {
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
+        backgroundColor: '#007AFF',
+        paddingVertical: 12,
+        paddingHorizontal: 30,
+        borderRadius: 8,
+    },
+    submitButtonText: {
+        color: '#FFFFFF',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    successMessage: {
+        position: 'absolute',
+        bottom: 100, // Adjust this value as needed
+        width: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 128, 0, 0.7)',
+        paddingVertical: 8,
+        borderRadius: 8,
+    },
+    successText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    modal: {
+        justifyContent: 'center',
+        margin: 0,
     },
   });
   
