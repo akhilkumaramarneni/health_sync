@@ -40,25 +40,39 @@ const FlowNavigator = () => {
     );
 };
 
+function PatientSessionsStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
+        options={{ drawerLabel: () => null, title: 'History' }} />
+      <Stack.Screen name="SessionInfo" component={SessionInfo} options={{ drawerLabel: () => null, title :"Session Info" }} />
+      <Stack.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'patient' }}/>
+      <Stack.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'patient' }}/>
+      <Stack.Screen name="MedicineDetails" component={MedicineDetails} options={{ drawerLabel: () => null, title :"Medicine Details" }} initialParams={{ role: 'patient' }}/>
+
+      {/* Add other screens in the Sessions stack if needed */}
+    </Stack.Navigator>
+  );
+}
+
 const MainPatientNavigator = () => {
     // drawerContent={(props) => <CustomDrawer {...props} />} use this to cusotmize drawer
     return (
         <Drawer.Navigator initialRouteName="MainPatientNavigator" >
             <Drawer.Screen name="ConsolidatedSessions" component={ConsolidatedSessions}
-                options={{ drawerLabel: () => null, title:'Overview' }} />
+                options={{title:'Overview' }} />
             <Drawer.Screen name="Notifications" component={Notifications} />
             <Drawer.Screen name="QR Code" component={QRCodeGenerator} />
-            <Drawer.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
-            options={{ drawerLabel: () => null, title: 'History' }} />
-            <Drawer.Screen name="SessionInfo" component={SessionInfo} options={{ drawerLabel: () => null, title :"Session Info" }} />
-            <Drawer.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'patient' }}/>
-            <Drawer.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'patient' }}/>
-            <Drawer.Screen name="MedicineDetails" component={MedicineDetails} options={{ drawerLabel: () => null, title :"Medicine Details" }} initialParams={{ role: 'patient' }}/>
+            <Stack.Screen 
+              name="PatientSessionsStackNavigator" 
+              component={PatientSessionsStackNavigator} 
+              options={{ title: 'History' }} 
+            />
         </Drawer.Navigator>
     );
 };
 
-function SessionsStackNavigator() {
+function DoctorSessionsStackNavigator() {
     return (
       <Stack.Navigator>
         <Stack.Screen 
@@ -84,7 +98,7 @@ function SessionsStackNavigator() {
         <Tab.Screen name="Scan" component={Scan} />
         <Tab.Screen 
           name="SessionsPreviousHistory" 
-          component={SessionsStackNavigator} 
+          component={DoctorSessionsStackNavigator} 
           options={{ title: 'History' }} 
         />
         {/* Add other tabs as needed */}

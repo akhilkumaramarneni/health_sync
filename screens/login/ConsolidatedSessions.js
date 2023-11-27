@@ -35,7 +35,7 @@ const ConsolidatedSessions = () => {
   const navigation = useNavigation();
 
   navigateToAllSessions = ()=>{
-    navigation.navigate('SessionsPreviousHistory');
+    navigation.navigate('PatientSessionsStackNavigator');
   }
   return (
     <>
