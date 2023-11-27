@@ -1,9 +1,10 @@
 // Import necessary React Native components
 import React from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
 import ListView from './components/ListView';
 import { useNavigation } from '@react-navigation/native';
-
+import { useAuth } from '../../store/AuthContext';
+import { ROLES } from '../../constants'
 // Dummy data for patient sessions (replace this with your actual data)
 
 const patientSessions = [
@@ -40,6 +41,7 @@ const patientSessions = [
 const SessionsPreviousHistory = () => {
 
     const navigation = useNavigation();
+    const { setLoggedInUserType, userType, setLoggedInUserName } = useAuth();
 
     viewItem = item => {
         console.log("navigate to tile page for patient")
@@ -61,6 +63,14 @@ const SessionsPreviousHistory = () => {
         keyExtractor={(item) => item.id}
         renderItem={renderSessionItem}
       />
+      {userType === ROLES.DOCTOR && (
+        <View style={styles.buttonContainer}>
+          <Button
+            title="Create New Session"
+            onPress={() =>  navigation.navigate('New Session')}
+          />
+        </View>
+      )}
     </View>
   );
 };
