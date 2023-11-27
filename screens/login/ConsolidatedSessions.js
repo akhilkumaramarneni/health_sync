@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import * as Progress from 'react-native-progress';
-const headerImage = '../../assets/images/header.jpg';
+const headerImage = '../../assets/images/uicon.png';
 const notification = require('../../assets/images/Notification.png');
-const banner = require('../../assets/images/BG.png');
+const banner = require('../../assets/images/bg2.png');
 const fire = require('../../assets/images/fire.png');
-const model = require('../../assets/images/model.png');
-const couple = require('../../assets/images/couple.jpg');
+const model = require('../../assets/images/upcoming_sessions.png');
+const couple = require('../../assets/images/prev_sessions.png');
 const cycle = require('../../assets/images/cycle.png');
 const yoga = require('../../assets/images/yoga.png');
 const walk = require('../../assets/images/walk.png');
@@ -29,13 +29,13 @@ const heart = require('../../assets/images/H.png');
 const calendar = require('../../assets/images/Calender.png');
 const profile = require('../../assets/images/User.png');
 const plus = require('../../assets/images/Plus.png');
+const medicine = require('../../assets/images/medicine.png');
 import { useNavigation } from '@react-navigation/native';
 
 const ConsolidatedSessions = () => {
   const navigation = useNavigation();
-
   navigateToAllSessions = ()=>{
-    navigation.navigate('SessionsPreviousHistory');
+    navigation.navigate('PatientSessionsStackNavigator');
   }
   return (
     <>
@@ -45,10 +45,10 @@ const ConsolidatedSessions = () => {
           <Banner />
         </View>
         <View style={{marginHorizontal: '3%'}}>
-          <Label>Excercise Activity</Label>
-          <View style={{flexDirection: 'row'}}>
-            {data.map((item, index) => (
-              <Card data={item} index={index} />
+        <Label>Upcoming Medicines</Label>
+          <View style={{flexDirection: 'row', marginBottom:10}}>
+            {medicinedata.map((item, index) => (
+              <MedicineCard data={item} index={index} />
             ))}
           </View>
           <View
@@ -74,14 +74,12 @@ const ConsolidatedSessions = () => {
               <VideoPlay index={index} />
             ))}
           </View>
-
-          <Label>Upcoming Medicines</Label>
-          <View style={{flexDirection: 'row', marginBottom:60}}>
+          <Label>Excercise Activity</Label>
+          <View style={{flexDirection: 'row', marginBottom:20}}>
             {data.map((item, index) => (
               <Card data={item} index={index} />
             ))}
           </View>
-          
         </View>
       </ScrollView>
       {/* <BottomTab /> */}
@@ -197,7 +195,7 @@ const VideoPlay = () => (
         }}>
         Diabetes
       </Text>
-      <View
+      {/* <View
         style={{
           position: 'absolute',
           backgroundColor: '#fff',
@@ -207,7 +205,7 @@ const VideoPlay = () => (
           borderRadius: 5,
         }}>
         <Image source={star} style={{height: 10, width: 10}} />
-      </View>
+      </View> */}
     </View>
     <View
       style={{
@@ -215,7 +213,7 @@ const VideoPlay = () => (
         padding: 10,
         borderRadius: 15,
       }}>
-      <View
+      {/* <View
         style={{
           position: 'absolute',
           backgroundColor: '#8860a2',
@@ -226,15 +224,11 @@ const VideoPlay = () => (
           zIndex: 3,
         }}>
         <Image source={play} style={{height: 10, width: 10}} />
-      </View>
+      </View> */}
       <Text style={{fontFamily: 'Poppins-Regular'}}>
         Summary of Session
       </Text>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontFamily: 'Poppins-Regular', fontSize: 12}}>
-          <Image source={book} style={{height: 15, width: 15}} />
-          {'   Beginner'}
-        </Text>
         <Text
           style={{
             fontFamily: 'Poppins-Regular',
@@ -326,6 +320,49 @@ const Card = ({data, index}) => {
     </View>
   );
 };
+
+const MedicineCard = ({ data }) => {
+  return (
+    <View
+      style={{
+        flex: 1,
+        height: 150, // Set a consistent height for all cards
+        padding: 10,
+        alignSelf: 'center',
+        backgroundColor: data.color,
+        justifyContent: 'space-between',
+        marginHorizontal: 8,
+        borderRadius: 10,
+        shadowColor: 'lightgrey',
+        shadowOffset: {width: -5, height: 5},
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+      }}>
+      
+      {/* Image in the middle of the card */}
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Image source={data.image} style={{ height: 50, width: 50 }} />
+      </View>
+
+      {/* Details at the bottom of the card */}
+      <View>
+        <Text style={{ fontSize: 10, fontFamily: 'Poppins-Light' }}>
+          {`Usage: ${data.usage}`} {/* Changed from data.day to data.usage */}
+        </Text>
+      </View>
+      
+      {/* Footer section */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}>
+        <Text style={{ fontFamily: 'Poppins-Regular' }}>{data.name}</Text>
+      </View>
+    </View>
+  );
+};
 const Header = () => (
   <View style={styles.header}>
     <ImageContainer image={require(`${headerImage}`)} />
@@ -345,13 +382,13 @@ const Banner = () => (
               style={styles.fireImage}
             />
           </View>
-          <Text style={styles.offer}>Upcoming meeting</Text>
+          <Text style={{...styles.offer, color: 'black'}}>Upcoming meeting</Text>
         </View>
-        <OfferText>Check up with Dr. Jhon</OfferText>
-        <OfferText>Wednesday 10 am at UF</OfferText>
+        <OfferText >Check up with Dr. Jhon</OfferText>
+        <OfferText >Wednesday 10 am at UF</OfferText>
       </View>
     </ImageBackground>
-    <Image source={model} style={styles.model} resizeMode="contain" />
+    {/* <Image source={model} style={styles.model} resizeMode="contain" /> */}
   </>
 );
 
@@ -364,13 +401,23 @@ const ImageContainer = ({image, height = '100%', width = '100%'}) => (
     <Image source={image} style={[{height, width}]} />
   </View>
 );
-const HeaderTitle = () => (
-  <View style={styles.title}>
-    <Text style={styles.bigTitle}>Hi, Jane</Text>
-    <Text style={styles.smallTitle}>Aug 12, 2021</Text>
-  </View>
-);
+const HeaderTitle = () => {
+  // Get the current date and time
+  const now = new Date();
+  const currentTime = now.toLocaleString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+  });
 
+  return (
+    <View style={styles.title}>
+      <Text style={styles.bigTitle}>Hi, Jane</Text>
+      {/* Replace "Aug 12, 2021" with the current time */}
+      <Text style={styles.smallTitle}>{currentTime}</Text>
+    </View>
+  );
+};
 const Label = ({children}) => <Text style={styles.label}>{children}</Text>;
 const styles = StyleSheet.create({
   container: {flex: 1},
@@ -413,7 +460,7 @@ const styles = StyleSheet.create({
   },
   screen: {margin: '3%'},
   offer: {color: 'white', fontFamily: 'Poppins-Regular', fontSize: 10},
-  offerText: {color: 'white', fontSize: 16, fontFamily: 'Poppins-Regular'},
+  offerText: {color: 'black', fontSize: 16, fontFamily: 'Poppins-Regular'},
 
   rowLabel: {
     flexDirection: 'row',
@@ -455,5 +502,28 @@ const data = [
     darkColor: '#8860a2',
     day : 6,
     time :"2 hr 35 mins"
+  },
+];
+
+const medicinedata = [
+  {
+    name: 'Tylenol',
+    status: 85,
+    image: medicine,
+    lightColor: '#f8e4d9',
+    color: '#ADE3F3',
+    darkColor: '#fac5a4',
+    usage : 'Once at Night',
+    // time : "1hr 35 min"
+  },
+  {
+    name: 'Azithromicin',
+    status: 25,
+    image: medicine,
+    lightColor: '#d7f0f7',
+    color: '#ADE3F3',
+    darkColor: '#aceafc',
+    usage : 'Twice a Day',
+    // time : "1 hr"
   },
 ];
