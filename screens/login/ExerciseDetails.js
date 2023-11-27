@@ -1,10 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput, } from 'react-native';
 import VideoPopup from '../login/components/VideoPopup';
+import { saveDetails } from '../../store/Details';
+import Modal from 'react-native-modal';
 
 const ExerciseDetails = ({ route }) => {
   const { role } = route.params;
+  const { data } = route.params;
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [exercises, setExercises] = useState([]);
+
+  useEffect(() => {
+    if (data && data.complextiles && data.complextiles.length > 0) {
+      const exerciseTiles = data.complextiles.find(tile => tile.type === 'excercise');
+
+      if (exerciseTiles && exerciseTiles.todo && exerciseTiles.todo.length > 0) {
+        const parsedExercises = exerciseTiles.todo.map(exercise => ({
+          id: Math.random().toString(36).substring(7),
+          name: exercise.type,
+          description: exercise.description,
+          videoURL: require(`../../assets/videos/stretching.mp4`),
+          // videoURL: require(`../../assets/videos/${exercise.type.toLowerCase()}.mp4`),
+        }));
+        setExercises(parsedExercises);
+      }
+    }
+  }, [data]);
 
   const openVideoPopup = (videoURL) => {
     setSelectedVideo(videoURL);
@@ -19,44 +40,30 @@ const ExerciseDetails = ({ route }) => {
   const [exerciseDuration, setExerciseDuration] = useState('');
   const [exerciseUrl, setExerciseUrl] = useState('');
 
-  const [exercises, setExercises] = useState([
-    {
-      id: '1',
-      name: 'Stretching',
-      description: 'Stretch your body',
-      duration: '10 minutes/day',
-      videoURL: require('../../assets/videos/stretching.mp4'),
-    },
-    {
-      id: '2',
-      name: 'Cycling',
-      description: 'Improve cardiovascular health',
-      duration: '30 minutes/day',
-      videoURL: require('../../assets/videos/cycling.mp4'),
-    },
-    // Add more exercise items as needed
-  ]);
-
 
   const createExercise = () => {
     const newExercise = {
       id: `${Math.random().toString(36).substring(7)}`,
       name: exerciseName,
       description: exerciseDesc,
-      duration: exerciseDuration,
-      videoURL: require('../../assets/videos/stretching.mp4'),
+      // duration: exerciseDuration,
+      videoURL: require('../../assets/videos/running.mp4'),
     };
 
     setExercises([...exercises, newExercise]);
     setExerciseName('');
     setExerciseDesc('');
-    setExerciseDuration('');
+    // setExerciseDuration('');
     setExerciseUrl('');
+
+    saveUpdatedData();
   };
 
   const deleteExercise = (id) => {
     const updatedExercises = exercises.filter((exercise) => exercise.id !== id);
     setExercises(updatedExercises);
+
+    saveUpdatedData();
   };
 
   const renderExerciseList = () => (
@@ -75,10 +82,10 @@ const ExerciseDetails = ({ route }) => {
        <Image source={require('../../assets/images/yoga.png')} style={styles.exerciseImage} />
        <Text style={styles.exerciseName}>{item.name}</Text>
        <Text style={styles.exerciseDescription}>{item.description}</Text>
-       <Text style={styles.exerciseDuration}>{item.duration}</Text>
+       {/* <Text style={styles.exerciseDuration}>{item.duration}</Text> */}
        {role === 'doctor' && (
           <TouchableOpacity style={styles.deleteButton} onPress={() => deleteExercise(item.id)}>
-            <Text style={styles.deleteButtonText}>Delete</Text>
+            <Text style={styles.deleteButtonText}>Remove</Text>
           </TouchableOpacity>
         )}
         <TouchableOpacity
@@ -91,63 +98,112 @@ const ExerciseDetails = ({ route }) => {
     );
   };
 
+  const submitDetails = () => {
+    saveUpdatedData();
+    setShowSuccessMessage(true);
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 900);
+  };
+
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const saveUpdatedData = () => {
+    const updatedExerciseTiles = {
+      type: 'excercise',
+      todo: exercises.map(exercise => ({
+        type: exercise.name,
+        description: exercise.description,
+      })),
+    };
+
+    const updatedData = { ...data }; // Copy existing data
+    let foundIndex = -1;
+    updatedData.complextiles.forEach((tile, index) => {
+      if (tile.type === 'excercise') {
+        foundIndex = index;
+      }
+    });
+
+    if (foundIndex !== -1) {
+      updatedData.complextiles[foundIndex].todo = updatedExerciseTiles.todo;
+    } else {
+      updatedData.complextiles.push(updatedExerciseTiles);
+    }
+    saveDetails(updatedData.complextiles);
+  };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {role === 'doctor' && (
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Exercise Name"
+              value={exerciseName}
+              onChangeText={(text) => setExerciseName(text)}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Exercise Description"
+              value={exerciseDesc}
+              onChangeText={(text) => setExerciseDesc(text)}
+            />
+            {/* <TextInput
+              style={styles.input}
+              placeholder="Duration"
+              value={exerciseDuration}
+              onChangeText={(text) => setExerciseDuration(text)}
+            /> */}
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => createExercise()}
+            >
+              <Text style={styles.addButtonText}>Add Exercise</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {exercises.map((exercise) => (
+          <View key={exercise.id} style={styles.exerciseItem}>
+            {renderExerciseItem(exercise)}
+          </View>
+        ))}
+
+        {/* Display video popup when 'selectedVideo' is not null */}
+        {selectedVideo && (
+          <VideoPopup videoURL={selectedVideo} onClose={closeVideoPopup} />
+        )}
+
+        {/* Display video popup when 'selectedVideo' is not null */}
+        {/* {selectedVideo && (
+          <VideoPopup videoURL={selectedVideo} onClose={closeVideoPopup} />
+        )} */}
+        
+      </ScrollView>
       {role === 'doctor' && (
-        <View style={styles.formContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Exercise Name"
-            value={exerciseName}
-            onChangeText={(text) => setExerciseName(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Exercise Description"
-            value={exerciseDesc}
-            onChangeText={(text) => setExerciseDesc(text)}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Duration"
-            value={exerciseDuration}
-            onChangeText={(text) => setExerciseDuration(text)}
-          />
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => createExercise()}
-          >
-            <Text style={styles.addButtonText}>Add Exercise</Text>
+          <TouchableOpacity style={styles.submitButton} onPress={submitDetails}>
+            <Text style={styles.submitButtonText}>Submit Details</Text>
           </TouchableOpacity>
-        </View>
       )}
-
-      {exercises.map((exercise) => (
-        <View key={exercise.id} style={styles.exerciseItem}>
-          {renderExerciseItem(exercise)}
-        </View>
-      ))}
-
-      {/* Display video popup when 'selectedVideo' is not null */}
-      {selectedVideo && (
-        <VideoPopup videoURL={selectedVideo} onClose={closeVideoPopup} />
-      )}
-
-      {/* Display video popup when 'selectedVideo' is not null */}
-      {selectedVideo && (
-        <VideoPopup videoURL={selectedVideo} onClose={closeVideoPopup} />
-      )}
-    </ScrollView>
+      <Modal isVisible={showSuccessMessage} style={styles.modal}>
+          <View style={styles.successMessage}>
+            <Text style={styles.successText}>Exercise Details successfully submitted!</Text>
+          </View>
+      </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#ffffff',
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 80, // Adjust this value to ensure content scrolls above the button
   },
   formContainer: {
     marginBottom: 15,
@@ -233,6 +289,39 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
+  submitButton: {
+    position: 'absolute',
+    bottom: 20,
+    alignSelf: 'center',
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  submitButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  successMessage: {
+    position: 'absolute',
+    bottom: 100, // Adjust this value as needed
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 128, 0, 0.7)',
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  successText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modal: {
+    justifyContent: 'center',
+    margin: 0,
+},
 });
 
 export default ExerciseDetails;

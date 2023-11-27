@@ -56,9 +56,9 @@ const SessionInfo = ({route}) => {
     const viewItem = (item) => {
         console.log("navigate to details page for patient", item)
        
-        if(item.type === 'Food') navigation.navigate('FoodDetails', { data: item });
-        else if(item.type === 'Medicines') navigation.navigate('MedicineDetails',{ data: item });
-        else if(item.type === 'Exercise') navigation.navigate('ExerciseDetails',{ data: item });
+        if(item.type === 'Food') navigation.navigate('FoodDetails', { data: data});
+        else if(item.type === 'Medicines') navigation.navigate('MedicineDetails',{ data: data });
+        else if(item.type === 'Exercise') navigation.navigate('ExerciseDetails',{ data: data });
         
         // this.props.navigation.navigate('FoodDetails', {
         //   item,
