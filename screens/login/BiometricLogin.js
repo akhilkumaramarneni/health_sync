@@ -18,7 +18,7 @@ import { ROLES } from '../../constants'
 
 export default function BiometricLogin() {
     const [form, setForm] = useState({ email: '', password: '' });
-    const { setLoggedInUserType, userType, setLoggedInUserName } = useAuth();
+    const { setLoggedInUserType, userType, setLoggedInUserName, setAllSessionsData,  } = useAuth();
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function BiometricLogin() {
             if (uniqueId == "EB49497A-CCE9-44C9-BD28-75F2E33048A7" || uniqueId == "193c6a5a8fe2ce9e") {
                 console.log(uniqueId, " and loggined as patient");
                 setLoggedInUserType("patient");
-                setLoggedInUserName('Mr. Akhil')
+                setLoggedInUserName('   ')
             }
             else {
                 console.log(uniqueId, " and loggined as doctor");
@@ -37,15 +37,28 @@ export default function BiometricLogin() {
                 setLoggedInUserName('Dr. Akhil')
             }
         });
-    })
-    
+
+        // call for get all sessions
+        const apiUrl = 'https://traficml.uc.r.appspot.com/get-all-sessions';
+        fetch(apiUrl)
+            .then(response => response.json()) // Parse the response to JSON
+            .then(jsonData => {
+                console.log(jsonData)
+                setAllSessionsData(jsonData);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+    },[])
+
     const onSignIn = () => {
         console.log("Sign In clicked");
-        if(userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
+        if (userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
         else navigation.navigate('MainDoctorNavigator');
         // navigation.navigate('MainPatientNavigator')
     }
-    
+
     const enableFaceId = () => {
         TouchID.authenticate('to demo this react-native component')
             .then(success => {
@@ -55,7 +68,7 @@ export default function BiometricLogin() {
 
                 // for now just use local store id and password
                 console.log("faceid success");
-                if(userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
+                if (userType == ROLES.PATIENT) navigation.navigate('MainPatientNavigator');
                 else navigation.navigate('MainDoctorNavigator');
             })
             .catch(error => {
