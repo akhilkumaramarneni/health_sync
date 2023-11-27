@@ -175,7 +175,7 @@ const FoodDetails = ({ route }) => {
         data={foods}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => renderFoodItem(item, toEat)} // Pass 'toEat' variable to renderFoodItem
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
         />
     );
   
@@ -244,7 +244,7 @@ const FoodDetails = ({ route }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 0.5,
+    flexGrow: 0.3,
     backgroundColor: '#ffffff',
     paddingVertical: 10,
     paddingHorizontal: 10,
