@@ -13,6 +13,10 @@ import QRCodeGenerator from './QRCodeGenerator';
 import SessionsPreviousHistory from './SessionsPreviousHistory';
 import SessionInfo from './SessionInfo';
 import Scan from './Scan';
+import FoodDetails from './FoodDetails';
+import ExerciseDetails from './ExerciseDetails';
+import MedicineDetails from './MedicineDetails';
+
 import NewSession from './NewSession';
 import CartScreen from './CartScreen'
 
@@ -47,6 +51,9 @@ const MainPatientNavigator = () => {
             <Drawer.Screen name="SessionsPreviousHistory" component={SessionsPreviousHistory} 
             options={{ drawerLabel: () => null, title: 'History' }} />
             <Drawer.Screen name="SessionInfo" component={SessionInfo} options={{ drawerLabel: () => null, title :"Session Info" }} />
+            <Drawer.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'patient' }}/>
+            <Drawer.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'patient' }}/>
+            <Drawer.Screen name="MedicineDetails" component={MedicineDetails} options={{ drawerLabel: () => null, title :"Medicine Details" }} initialParams={{ role: 'patient' }}/>
         </Drawer.Navigator>
     );
 };
