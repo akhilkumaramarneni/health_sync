@@ -84,27 +84,25 @@ const MedicineDetails = ({ route }) => {
 
     const saveUpdatedData = () => {
         const updatedMedicineTiles = {
-          type: 'medicine',
-          todo: medicines.map(medicine => ({
-            type: medicine.name, // Assuming 'name' is equivalent to 'type' in JSON
-            description: medicine.description,
-          })),
+            type: 'medicine',
+            todo: medicines.map((medicine) => ({
+                type: medicine.name, // Assuming 'name' is equivalent to 'type' in JSON
+                description: medicine.description,
+            })),
         };
-      
-        const updatedData = { ...data }; // Copy existing data
-        let foundIndex = -1;
-        updatedData.complextiles.forEach((tile, index) => {
-          if (tile.type === 'medicine') {
-            foundIndex = index;
-          }
-        });
-      
-        if (foundIndex !== -1) {
-          updatedData.complextiles[foundIndex].todo = updatedMedicineTiles.todo;
-        } else {
-          updatedData.complextiles.push(updatedMedicineTiles);
+    
+        let updatedData = { complextiles: [] }; // Initialize with an empty complextiles array if 'data' is undefined or null
+        if (data && data.complextiles) {
+            updatedData = { ...data };
         }
-      
+    
+        const existingMedicineIndex = updatedData.complextiles.findIndex((tile) => tile.type === 'medicine');
+        if (existingMedicineIndex !== -1) {
+            updatedData.complextiles[existingMedicineIndex].todo = updatedMedicineTiles.todo;
+        } else {
+            updatedData.complextiles.push(updatedMedicineTiles);
+        }
+    
         // Call saveDetails function to store the updated data
         saveDetails(updatedData.complextiles);
     };

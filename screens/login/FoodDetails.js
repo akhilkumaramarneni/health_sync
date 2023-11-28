@@ -48,7 +48,7 @@ const FoodDetails = ({ route }) => {
     }, [data]);
   
     const handleAddNewFood = (toEat) => {
-        if (newFoodName && newFoodDescription && newFoodExamples) {
+        if (newFoodName ) {
           const newFood = {
             id: Math.random().toString(),
             name: newFoodName,
@@ -101,32 +101,52 @@ const FoodDetails = ({ route }) => {
 
     const storeUpdatedData = () => {
         const updatedFoodTiles = {
-          type: 'food',
-          todo: foodsToEat.map(food => ({
-            type: food.name,
-            description: food.description,
-            suggestions: food.examples.split(',').map(example => example.trim())
-          })),
-          notTodo: foodsNotToEat.map(food => ({
-            type: food.name,
-            description: food.description,
-            suggestions: food.examples.split(',').map(example => example.trim())
-          }))
+            type: 'food',
+            todo: foodsToEat.map((food) => ({
+                type: food.name,
+                description: food.description,
+                suggestions: food.examples.split(',').map((example) => example.trim()),
+            })),
+            notTodo: foodsNotToEat.map((food) => ({
+                type: food.name,
+                description: food.description,
+                suggestions: food.examples.split(',').map((example) => example.trim()),
+            })),
         };
     
-        // Update the data with the modified food tiles
-        const updatedData = { ...data }; // Assuming 'data' is available in the component
+        // Create a new object if 'data' is null or undefined
+        const updatedData = data ? { ...data } : { complextiles: [] };
+    
         if (updatedData.complextiles) {
-          const foodTileIndex = updatedData.complextiles.findIndex(tile => tile.type === 'food');
-          if (foodTileIndex !== -1) {
-            updatedData.complextiles[foodTileIndex].todo = updatedFoodTiles.todo;
-            updatedData.complextiles[foodTileIndex].notTodo = updatedFoodTiles.notTodo;
-          }
+            const foodTileIndex = updatedData.complextiles.findIndex(
+                (tile) => tile.type === 'food'
+            );
+            if (foodTileIndex !== -1) {
+                updatedData.complextiles[foodTileIndex].todo = updatedFoodTiles.todo;
+                updatedData.complextiles[foodTileIndex].notTodo = updatedFoodTiles.notTodo;
+            } else {
+                // If 'food' type does not exist, create a new 'food' type object
+                updatedData.complextiles.push({
+                    type: 'food',
+                    todo: updatedFoodTiles.todo,
+                    notTodo: updatedFoodTiles.notTodo,
+                });
+            }
+        } else {
+            // If 'complextiles' does not exist, create a new array with the 'food' type object
+            updatedData.complextiles = [
+                {
+                    type: 'food',
+                    todo: updatedFoodTiles.todo,
+                    notTodo: updatedFoodTiles.notTodo,
+                },
+            ];
         }
-
+    
         // Call function to save or process the updated data (e.g., send to an API)
         saveDetails(updatedData.complextiles);
     };
+    
 
     const submitDetails = () => {
         storeUpdatedData();
@@ -153,7 +173,7 @@ const FoodDetails = ({ route }) => {
             <Text style={styles.foodDescription}>{item.description}</Text>
             <Text style={styles.foodExamples}>{item.examples}</Text>
 
-            {doubleClickedItem === item.id && (
+            {doubleClickedItem === item.id && role === 'doctor' && (
                 <View style={styles.deleteContainer}>
                     <TouchableOpacity
                     style={styles.deleteButton}
@@ -189,7 +209,7 @@ const FoodDetails = ({ route }) => {
           <View style={styles.formContainer}>
             <TextInput
               style={styles.input}
-              placeholder="Enter food name"
+              placeholder="Enter food type"
               value={newFoodName}
               onChangeText={setNewFoodName}
             />

@@ -97,19 +97,19 @@ function DoctorSessionsStackNavigator() {
           name="FoodDetails" 
           component={FoodDetails} 
           options={{ drawerLabel: () => null, title :"Food Details" }} 
-          initialParams={{ role: 'patient' }}
+          initialParams={{ role: 'doctor' }}
         />
         <Stack.Screen 
           name="ExerciseDetails" 
           component={ExerciseDetails} 
           options={{ drawerLabel: () => null, title :"Exercise Details" }} 
-          initialParams={{ role: 'patient' }}
+          initialParams={{ role: 'doctor' }}
         />
         <Stack.Screen 
           name="MedicineDetails" 
           component={MedicineDetails} 
           options={{ drawerLabel: () => null, title :"Medicine Details" }} 
-          initialParams={{ role: 'patient' }}
+          initialParams={{ role: 'doctor' }}
         />
 
         {/* Add other screens in the Sessions stack if needed */}

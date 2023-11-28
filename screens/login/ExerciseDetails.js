@@ -110,28 +110,28 @@ const ExerciseDetails = ({ route }) => {
 
   const saveUpdatedData = () => {
     const updatedExerciseTiles = {
-      type: 'excercise',
-      todo: exercises.map(exercise => ({
-        type: exercise.name,
-        description: exercise.description,
-      })),
+        type: 'excercise',
+        todo: exercises.map((exercise) => ({
+            type: exercise.name,
+            description: exercise.description,
+        })),
     };
 
-    const updatedData = { ...data }; // Copy existing data
-    let foundIndex = -1;
-    updatedData.complextiles.forEach((tile, index) => {
-      if (tile.type === 'excercise') {
-        foundIndex = index;
-      }
-    });
-
-    if (foundIndex !== -1) {
-      updatedData.complextiles[foundIndex].todo = updatedExerciseTiles.todo;
-    } else {
-      updatedData.complextiles.push(updatedExerciseTiles);
+    let updatedData = { complextiles: [] }; // Initialize with an empty complextiles array if 'data' is undefined or null
+    if (data && data.complextiles) {
+        updatedData = { ...data };
     }
+
+    const foundIndex = updatedData.complextiles.findIndex((tile) => tile.type === 'excercise');
+    if (foundIndex !== -1) {
+        updatedData.complextiles[foundIndex].todo = updatedExerciseTiles.todo;
+    } else {
+        updatedData.complextiles.push(updatedExerciseTiles);
+    }
+
     saveDetails(updatedData.complextiles);
   };
+
 
   return (
     <View style={styles.container}>
