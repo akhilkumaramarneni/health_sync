@@ -1,6 +1,6 @@
 // Import necessary React Native components
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React,{useState} from 'react';
+import { View, Text, FlatList, StyleSheet, Modal, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ListView from '../login/components/ListView';
 const yoga = require('../../assets/images/yoga.png');
@@ -9,6 +9,10 @@ const medicineIcon = require('../../assets/images/medicine.jpg');
 const exerciseIcon = require('../../assets/images/exerciseIcon.jpg');
 
 // Dummy data for patient sessions (replace this with your actual data)
+
+
+
+  const loremIpsumText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.";
 
 const patientSessions = [
     {
@@ -39,6 +43,14 @@ const patientSessions = [
 
 // Define the PatientHistorySessions component
 const SessionInfo = ({route}) => {
+  const [isModalVisible, setModalVisible] = useState(false);
+
+
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+    //isModalVisible= (!isModalVisible);
+  };
 
   const {data} = route.params; 
 
@@ -76,6 +88,10 @@ const SessionInfo = ({route}) => {
              <TouchableOpacity onPress={() => viewItem(item)} underlayColor="white">
              <View style = {{flexDirection:'row', marginTop:30, marginLeft:10}}>
                <Image style = {{backgroundColor:'red', width:100, height:100}} source={getIconType(item)} />
+               <View style={stylesNew.item} >
+            
+               <Text style={stylesNew.text}>{item.type}</Text>
+               </View>
                {/* <View style = {{backgroundColor:'green', flex:0.9, justifyContent:'space-between'}}>
                   <Text>{item.type}</Text>
                   <Text>{item.description}</Text>
@@ -105,6 +121,25 @@ const SessionInfo = ({route}) => {
       )
   };
 
+  renderSessionItemNewSimple = ({item}) => {
+    return (
+
+      <TouchableOpacity
+      style={stylesNew.itemContainerNew}
+    >
+      <View style={stylesNew.itemNew}>
+        {/* <Text style={stylesNew.text}>Doctor: {item.doctor}</Text> */}
+        {/* {userType == ROLES. && (<Text style={stylesNew.text}>Doctor: {item.patient}</Text>)} */}
+        {/* {userType == ROLES.PATIENT && (<Text style={stylesNew.text}>Doctor: {item.doctor}</Text>)} */}
+        {/* <Text style={stylesNew.text}>Visit Date: {new Date(item.visitTime).toLocaleDateString('en-US',{year: 'numeric', month: '2-digit', day:'2-digit'})}</Text> */}
+        <Text style={stylesNew.textNew}> {item}</Text>
+      </View>
+    </TouchableOpacity>
+
+      
+    )
+};
+
   return (
     <View style={styles.container}>
         <TouchableOpacity
@@ -120,13 +155,36 @@ const SessionInfo = ({route}) => {
 
 
       
-            <Text style={stylesNew.text}>Diagnose: {data.simpletiles.join('\n')}</Text>
-            <TouchableOpacity
+            {/* <Text style={stylesNew.text}>Diagnose: {data.simpletiles.join('\n')}</Text> */}
+            {/* <TouchableOpacity
         style={stylesNew.button}
         onPress={() => navigation.navigate('SessionInfo', { data: item })}
       >
         <Text style={styles.buttonText}>View Transcript</Text>
+      </TouchableOpacity> */}
+      {/* <View style={stylesModal.container}> */}
+      <TouchableOpacity onPress={toggleModal} style={stylesNew.button}>
+            <Text style={styles.buttonText}>View Summary</Text>
       </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={stylesModal.modalContainer}>
+          <View style={stylesModal.modalContent}>
+            <ScrollView>
+              <Text>{loremIpsumText}</Text>
+            </ScrollView>
+            <TouchableOpacity onPress={toggleModal} style={stylesModal.closeButton}>
+              <Text style={stylesModal.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/* </View> */}
           </View>
         </TouchableOpacity>
 
@@ -135,6 +193,13 @@ const SessionInfo = ({route}) => {
         numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={renderSessionItemNew}
+        ItemSeparatorComponent = {ItemSeparator}
+      />
+       <FlatList
+        data={data.simpletiles}
+        // numColumns={2}
+        keyExtractor={(item) => item.id}
+        renderItem={renderSessionItemNewSimple}
         ItemSeparatorComponent = {ItemSeparator}
       />
     </View>
@@ -155,7 +220,8 @@ const stylesNew = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#ecf0f1', // Background color for the entire screen
+    //backgroundColor: '#ecf0f1', // Background color for the entire screen
+    backgroundColor: "#fff",
   },
   itemContainer: {
     marginBottom: 10,
@@ -163,10 +229,22 @@ const stylesNew = StyleSheet.create({
     backgroundColor: '#003087',
     overflow: 'hidden', // Ensure rounded corners are applied
   },
+  itemContainerNew: {
+    marginBottom: 10,
+    borderRadius: 10,
+    //backgroundColor: '#003087',
+    overflow: 'hidden', // Ensure rounded corners are applied
+  },
   item: {
     padding: 15,
     backgroundColor: '#3498db', // Background color for each tile
     borderRadius: 10,
+  },
+  itemNew: {
+    padding: 10,
+    //backgroundColor: '#3498db', // Background color for each tile
+    backgroundColor: '#e0813d',
+    borderRadius: 30,
   },
   button: {
     backgroundColor: '#32a85f',
@@ -185,6 +263,53 @@ const stylesNew = StyleSheet.create({
   text: {
     color: '#fff', // Text color
     marginBottom: 5,
+  },
+  textNew: {
+    color: '#fff', // Text color
+    marginBottom: 5,
+    fontSize:25,
+  },
+});
+
+
+
+const stylesModal = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    maxHeight: '80%', // Set a maximum height for the modal content
+  },
+  closeButton: {
+    marginTop: 10,
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 

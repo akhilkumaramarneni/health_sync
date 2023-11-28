@@ -5,6 +5,7 @@ import ListView from './components/ListView';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../../store/AuthContext';
 import { ROLES } from '../../constants'
+import { RollInLeft } from 'react-native-reanimated';
 // Dummy data for patient sessions (replace this with your actual data)
 
 const patientSessions = [
@@ -43,8 +44,11 @@ const SessionsPreviousHistory = () => {
 
     const navigation = useNavigation();
     //const { setLoggedInUserType, userType, setLoggedInUserName, } = useAuth();
-    const { setLoggedInUserType, userType, setLoggedInUserName, setAllSessionsData,  allSessionsData} = useAuth();
+    const { setLoggedInUserType, userType, setLoggedInUserName, setAllSessionsData,  allSessionsData,loggedInUserName} = useAuth();
 console.log("hello data")
+console.log("-------------------------");
+console.log(loggedInUserName);
+console.log("-------------------------");
 const prettyJson = JSON.stringify(allSessionsData, null, 2);
 console.log(prettyJson);
 //console.log(allSessionsData)
@@ -79,7 +83,9 @@ console.log(prettyJson);
           onPress={() => navigation.navigate('SessionInfo', { data: item })}
         >
           <View style={stylesNew.item}>
-            <Text style={stylesNew.text}>Doctor: {item.doctor}</Text>
+            {/* <Text style={stylesNew.text}>Doctor: {item.doctor}</Text> */}
+            {/* {userType == ROLES. && (<Text style={stylesNew.text}>Doctor: {item.patient}</Text>)} */}
+            {userType == ROLES.PATIENT && (<Text style={stylesNew.text}>Doctor: {item.doctor}</Text>)}
             <Text style={stylesNew.text}>Visit Date: {new Date(item.visitTime).toLocaleDateString('en-US',{year: 'numeric', month: '2-digit', day:'2-digit'})}</Text>
             <Text style={stylesNew.text}>Disease: {item.disease}</Text>
 
@@ -101,11 +107,21 @@ console.log(prettyJson);
         return <ListView item={item} viewItem={this.viewItem} />;
     };
 
+
+    const getFilteredDataSorted = () => {
+
+      filteredSessionsPatient = allSessionsData.filter((session)=>session.patient==="Christy");
+      filteredSessionsPatient = [...filteredSessionsPatient].sort((a,b)=> new Date(b.visitTime).toLocaleDateString('en-US',{year: 'numeric', month: '2-digit', day:'2-digit'}).localeCompare(new Date(a.visitTime).toLocaleDateString('en-US',{year: 'numeric', month: '2-digit', day:'2-digit'})))
+      const filteredSessionsDoctor = allSessionsData.filter((session)=> session.patient==="Christy").filter((session)=>session.doctor==="Dr. Jonathan");
+      if(userType === ROLES.PATIENT) return filteredSessionsPatient;
+      return filteredSessionsDoctor;
+    };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Patient History Sessions</Text>
+      {/* <Text style={styles.title}>Patient History Sessions</Text> */}
       <FlatList
-        data={allSessionsData}
+        data={getFilteredDataSorted()}
         keyExtractor={(item,index) => index.toString()}
         renderItem={(item)=>renderItemNavigate({ ...item, navigation })}
       />

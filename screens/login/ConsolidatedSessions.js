@@ -385,7 +385,7 @@ const Banner = () => (
           </View>
           <Text style={{...styles.offer, color: 'black'}}>Upcoming meeting</Text>
         </View>
-        <OfferText >Check up with Dr. Jhon</OfferText>
+        <OfferText >Check up with Dr. Franklin</OfferText>
         <OfferText >Wednesday 10 am at UF</OfferText>
       </View>
     </ImageBackground>
@@ -415,7 +415,7 @@ const HeaderTitle = () => {
 
   return (
     <View style={styles.title}>
-      <Text style={styles.bigTitle}>Hi, {loggedInUserName && loggedInUserName.trim() !== '' ? loggedInUserName : 'Jane'}! </Text>
+      <Text style={styles.bigTitle}>Hi, Christy</Text>
       {/* Replace "Aug 12, 2021" with the current time */}
       <Text style={styles.smallTitle}>{currentTime}</Text>
     </View>
