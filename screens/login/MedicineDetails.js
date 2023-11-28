@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
 const yoga = require('../../assets/images/yoga.png');
-import { saveDetails } from '../../store/Details';
+import { saveDetailsMedicine } from '../../store/Details';
 import Modal from 'react-native-modal';
+import { useAuth } from '../../store/AuthContext';
 
 const MedicineDetails = ({ route }) => {
     const { role } = route.params;
     const { data } = route.params;
     const [medicines, setMedicines] = useState([]);
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
+    const { setAllFoodData, setAllExcerciseData, setAllMedicineData} = useAuth();
 
     useEffect(() => {
         if (data && data.complextiles && data.complextiles.length > 0) {
@@ -104,7 +106,8 @@ const MedicineDetails = ({ route }) => {
         }
     
         // Call saveDetails function to store the updated data
-        saveDetails(updatedData.complextiles);
+        // saveDetailsMedicine(updatedData.complextiles);
+        setAllMedicineData(updatedData.complextiles);
     };
 
     const submitDetails = () => {

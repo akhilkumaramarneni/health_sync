@@ -5,7 +5,8 @@ import { useAuth } from '../../store/AuthContext';
 
 const CartScreen = ({ route }) => {
     const [cartItems, setCartItems] = useState(route.params.items || []);
-    const { loggedInUserName } = useAuth();
+    const { loggedInUserName, allFoodData, allExcerciseData, allMedicineData } = useAuth();
+
 
     const handleRemoveItem = (indexToRemove) => {
         const newItems = cartItems.filter((_, index) => index !== indexToRemove);
@@ -17,13 +18,21 @@ const CartScreen = ({ route }) => {
         const currentTime = new Date();
         // Formatting the date and time as a string (e.g., "2023-03-21T10:30:15")
         const visitTime = currentTime.toISOString();
+
+       let complexTiles = []
+       if(allFoodData)complexTiles.push(allFoodData[0]) 
+       if(allExcerciseData)complexTiles.push(allExcerciseData[0])
+       if(allMedicineData)complexTiles.push(allMedicineData[0])
+
+       console.log("all data ", complexTiles)
+
         const prescriptionData = {
-            doctor: loggedInUserName,
+            doctor: "fucker",
             patient: "patient1",
             disease: "", 
             visitTime: visitTime, // assuming you have a way to set these
             simpletiles: cartItems.filter(item => item.flag === 'simple').map(item => item.text),
-            complextiles: cartItems.filter(item => item.flag === 'complex').map(item => ({ type: item.type, todo: item.todo })),
+            complextiles:  complexTiles
         };
 
         console.log("Send data to server:", JSON.stringify(prescriptionData));
@@ -37,6 +46,7 @@ const CartScreen = ({ route }) => {
                 body: prescriptionDataJson,
             })
             .then(response => {
+                console.log("api call", response)
                 if (!response.ok) {
                     return response.text().then(text => {
                         throw new Error(`HTTP error! status: ${response.status}, Body: ${text}`);
@@ -75,6 +85,9 @@ const CartScreen = ({ route }) => {
         
     };
 
+    console.log("all data food", allFoodData, allExcerciseData, allMedicineData)
+    
+
     return (
         <View style={styles.container}>
             <ScrollView style={styles.scrollView}>
@@ -89,6 +102,28 @@ const CartScreen = ({ route }) => {
                             <Text style={styles.text}>{item.text}</Text>
                         </TouchableOpacity>
                     ))}
+                    
+                    {
+                        allFoodData ? <TouchableOpacity 
+                        style={styles.tile} 
+                    >
+                        <Text style={styles.text}>Food</Text>
+                        </TouchableOpacity> : null
+                    }
+                                {
+                        allExcerciseData ? <TouchableOpacity 
+                        style={styles.tile} 
+                    >
+                        <Text style={styles.text}>Exercise</Text>
+                        </TouchableOpacity> : null
+                    }
+                                {
+                        allMedicineData ? <TouchableOpacity 
+                        style={styles.tile} 
+                    >
+                        <Text style={styles.text}>Medicine</Text>
+                        </TouchableOpacity> : null
+                    }
                 </View>
             </ScrollView>
             <TouchableOpacity 

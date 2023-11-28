@@ -119,16 +119,20 @@ function DoctorSessionsStackNavigator() {
   
   const MainDoctorNavigator = () => {
     return (
-      <Tab.Navigator initialRouteName="MainDoctorNavigator">
+      <Tab.Navigator initialRouteName="MainDoctorNavigator" tabBarOptions={{
+        style: {
+          borderColor: 'red', // Remove top border for a cleaner look
+        },
+      }}>
         <Tab.Screen name="Scan" component={Scan} />
         <Tab.Screen 
           name="SessionsPreviousHistory" 
           component={DoctorSessionsStackNavigator} 
           options={{ title: 'History' }} 
         />
-        <Tab.Screen name="FoodDetails" component={FoodDetails} options={{ drawerLabel: () => null, title :"Food Details" }} initialParams={{ role: 'doctor' }}/>
-        <Tab.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ drawerLabel: () => null, title :"Exercise Details" }} initialParams={{ role: 'doctor' }}/>
-        <Tab.Screen name="MedicineDetails" component={MedicineDetails} options={{ drawerLabel: () => null, title :"Medicine Details" }} initialParams={{ role: 'doctor' }}/>
+        <Tab.Screen name="FoodDetails" component={FoodDetails} options={{ tabBarIcon : () => null, tabBarLabel: () => null }} initialParams={{ role: 'doctor' }}/>
+        <Tab.Screen name="ExerciseDetails" component={ExerciseDetails} options={{ tabBarIcon : () => null, tabBarLabel: () => null }} initialParams={{ role: 'doctor' }}/>
+        <Tab.Screen name="MedicineDetails" component={MedicineDetails} options={{ tabBarIcon : () => null, tabBarLabel: () => null }} initialParams={{ role: 'doctor' }}/>
         {/* Add other tabs as needed */}
       </Tab.Navigator>
     );
