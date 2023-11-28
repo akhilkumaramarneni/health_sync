@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 const yoga = require('../../assets/images/foodDetail.png');
 // import { saveDetailsFood } from '../../store/Details';
 import Modal from 'react-native-modal';
@@ -20,6 +21,8 @@ const FoodDetails = ({ route }) => {
     const [selectedItemId, setSelectedItemId] = useState(null);
     const [doubleClickedItem, setDoubleClickedItem] = useState(null);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+    const navigation = useNavigation();
 
     useEffect(() => {
         if (data && data.complextiles && data.complextiles.length > 0) {
@@ -161,6 +164,8 @@ const FoodDetails = ({ route }) => {
         setTimeout(() => {
             setShowSuccessMessage(false);
         }, 900);
+
+        // navigation.navigate('New Session');
       };
 
     const renderFoodItem = ( item , toEat) => {

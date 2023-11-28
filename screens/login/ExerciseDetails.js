@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput, } from 'react-native';
 import VideoPopup from '../login/components/VideoPopup';
+import { useNavigation } from '@react-navigation/native';
 import { saveDetailsExcerice } from '../../store/Details';
 import Modal from 'react-native-modal';
 import { useAuth } from '../../store/AuthContext';
@@ -11,6 +12,8 @@ const ExerciseDetails = ({ route }) => {
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [exercises, setExercises] = useState([]);
   const { setAllFoodData, setAllExcerciseData} = useAuth();
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (data && data.complextiles && data.complextiles.length > 0) {
@@ -106,6 +109,8 @@ const ExerciseDetails = ({ route }) => {
     setTimeout(() => {
       setShowSuccessMessage(false);
     }, 900);
+
+    // navigation.navigate('New Session');
   };
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);

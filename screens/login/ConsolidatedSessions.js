@@ -31,6 +31,7 @@ const profile = require('../../assets/images/User.png');
 const plus = require('../../assets/images/Plus.png');
 const medicine = require('../../assets/images/medicine.png');
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from '../../store/AuthContext';
 
 const ConsolidatedSessions = () => {
   const navigation = useNavigation();
@@ -402,6 +403,8 @@ const ImageContainer = ({image, height = '100%', width = '100%'}) => (
   </View>
 );
 const HeaderTitle = () => {
+
+  const { loggedInUserName, } = useAuth();
   // Get the current date and time
   const now = new Date();
   const currentTime = now.toLocaleString('en-US', { 
@@ -412,7 +415,7 @@ const HeaderTitle = () => {
 
   return (
     <View style={styles.title}>
-      <Text style={styles.bigTitle}>Hi, Jane</Text>
+      <Text style={styles.bigTitle}>Hi, {loggedInUserName && loggedInUserName.trim() !== '' ? loggedInUserName : 'Jane'}! </Text>
       {/* Replace "Aug 12, 2021" with the current time */}
       <Text style={styles.smallTitle}>{currentTime}</Text>
     </View>
