@@ -26,29 +26,52 @@ const CartScreen = ({ route }) => {
             complextiles: cartItems.filter(item => item.flag === 'complex').map(item => ({ type: item.type, todo: item.todo })),
         };
 
-        console.log("Send data to server:", JSON.stringify(prescriptionData, null, 2));
-        const apiEndpoint = 'https://traficml.uc.r.appspot.com/get-all-sessions';
-        fetch(apiEndpoint, {
-            method: 'POST', // or 'PUT' if you are updating data
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(JSON.stringify(prescriptionData, null, 2)),
+        console.log("Send data to server:", JSON.stringify(prescriptionData));
+        const prescriptionDataJson = JSON.stringify(prescriptionData);
+        const apiEndpoint = 'https://traficml.uc.r.appspot.com/upload-session';
+            fetch(apiEndpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: prescriptionDataJson,
             })
             .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP error! status: ${response.status}, Body: ${text}`);
+                    });
+                }
+                return response.json();
             })
             .then(data => {
-            console.log('Success:', data);
-            // Handle the response data
+                console.log('Success:', data);
+                // Handle the response data
             })
             .catch(error => {
-            console.error('Error:', error);
-            // Handle errors
+                console.error('Error:', error);
+                // Handle errors
             });
+
+
+        // fetch(apiEndpoint, {
+        //     method: 'GET', // GET is the default method, so this line is optional
+        //     })
+        //     .then(response => {
+        //     if (!response.ok) {
+        //         throw new Error('Network response was not ok ' + response.statusText);
+        //     }
+        //     console.log('response ' + response.json());
+        //     console.log(JSON.stringify(response));
+        //     })
+        //     .then(data => {
+        //     console.log('data ' + data);
+        //     // Process the data
+        //     })
+        //     .catch(error => {
+        //     console.error('Fetch error:', error);
+        //     });
+
         
     };
 

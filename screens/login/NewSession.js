@@ -84,10 +84,29 @@ const SearchableTileView = () => {
     }
   };
   
+  const navigateDetailsPage = (careType) => {
+      switch(careType) {
+          case "Food":
+              navigation.navigate('FoodDetails', { role: 'doctor' }); // Navigate to Food screen
+              break;
+          case "Exercise":
+              navigation.navigate('ExerciseDetails', { role: 'doctor' }); // Navigate to Exercise screen
+              break;
+          case "Medicine":
+              navigation.navigate('MedicineDetails', { role: 'doctor' }); // Navigate to Medicine screen
+              break;
+          default:
+              console.log("Invalid care type");
+      }
+  };
 
   const handleItemClick = (careItem) => {
     console.log(careItem)
-    if (!selectedItems.includes(careItem)) {
+    if (selectedItems.includes(careItem)) {
+        // If the item is already selected, remove it from the array
+        setSelectedItems(selectedItems.filter(item => item !== careItem));
+    } else {
+        // If the item is not selected, add it to the array
         setSelectedItems([...selectedItems, careItem]);
     }
     
@@ -119,6 +138,28 @@ const SearchableTileView = () => {
         onChangeText={handleSearch}
       />
       <ScrollView style={styles.tileContainer}>
+        {/* Permanent Tiles */}
+        <TouchableOpacity 
+            key="food" 
+            style={styles.tile} 
+            onPress={() => navigateDetailsPage("Food")}
+        >
+            <Text style={styles.text}>Food</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+            key="exercise" 
+            style={styles.tile} 
+            onPress={() => navigateDetailsPage("Exercise")}
+        >
+            <Text style={styles.text}>Exercise</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+            key="medicine" 
+            style={styles.tile} 
+            onPress={() => navigateDetailsPage("Medicine")}
+        >
+            <Text style={styles.text}>Medicine</Text>
+        </TouchableOpacity>
         {/* ... other component code ... */}
         {filteredData.length > 0 && !selectedCare && (
           filteredData.map(item => (
@@ -127,17 +168,15 @@ const SearchableTileView = () => {
             </TouchableOpacity>
           ))
         )}
-        {selectedCare && (
-            selectedCare.map((careItem, index) => (
-            <TouchableOpacity 
-                key={index} 
-                style={styles.tile} 
-                onPress={() => handleItemClick(careItem)}
-            >
-                <Text style={styles.text}>{careItem.text}</Text>
-            </TouchableOpacity>
-            ))
-        )}
+        {selectedCare && selectedCare.map((careItem, index) => (
+                <TouchableOpacity 
+                    key={index} 
+                    style={[styles.tile, selectedItems.includes(careItem) && styles.selectedTile]} 
+                    onPress={() => handleItemClick(careItem)}
+                >
+                    <Text style={styles.text}>{careItem.text}</Text>
+                </TouchableOpacity>
+            ))}
       </ScrollView>
       <TouchableOpacity 
         style={styles.button} 
@@ -171,6 +210,10 @@ const styles = StyleSheet.create({
       marginVertical: 8,
       marginHorizontal: 16,
       // ... other tile styles ...
+    },
+    selectedTile: {
+        // Additional styles for selected tile
+        backgroundColor: '#007ACC', // Change background color when selected
     },
     noResultsText: {
       marginTop: 20,

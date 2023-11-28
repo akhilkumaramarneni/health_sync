@@ -87,6 +87,31 @@ function DoctorSessionsStackNavigator() {
           name="Cart" 
           component={CartScreen} 
         />
+        <Stack.Screen 
+          name="SessionInfo" 
+          component={SessionInfo} 
+          options={{ drawerLabel: () => null, 
+          title :"Session Info" }} 
+        />
+        <Stack.Screen 
+          name="FoodDetails" 
+          component={FoodDetails} 
+          options={{ drawerLabel: () => null, title :"Food Details" }} 
+          initialParams={{ role: 'patient' }}
+        />
+        <Stack.Screen 
+          name="ExerciseDetails" 
+          component={ExerciseDetails} 
+          options={{ drawerLabel: () => null, title :"Exercise Details" }} 
+          initialParams={{ role: 'patient' }}
+        />
+        <Stack.Screen 
+          name="MedicineDetails" 
+          component={MedicineDetails} 
+          options={{ drawerLabel: () => null, title :"Medicine Details" }} 
+          initialParams={{ role: 'patient' }}
+        />
+
         {/* Add other screens in the Sessions stack if needed */}
       </Stack.Navigator>
     );
