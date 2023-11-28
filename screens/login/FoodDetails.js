@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
 const yoga = require('../../assets/images/foodDetail.png');
-import { saveDetails } from '../../store/Details';
+// import { saveDetailsFood } from '../../store/Details';
 import Modal from 'react-native-modal';
+import { useAuth } from '../../store/AuthContext';
 
 const FoodDetails = ({ route }) => {
 
     const { role, patientId } = route.params;
     const { data } = route.params;
+    const { setAllFoodData, allFoodData} = useAuth();
 
     const [foodsToEat, setFoodsToEat] = useState([]);
     const [foodsNotToEat, setFoodsNotToEat] = useState([]);
@@ -56,6 +58,8 @@ const FoodDetails = ({ route }) => {
             examples: newFoodExamples,
             image: yoga, // Assuming this is the default image
           };
+
+          console.log("test add new food", newFood)
     
           if (toEat) {
             setFoodsToEat([...foodsToEat, newFood]);
@@ -144,7 +148,8 @@ const FoodDetails = ({ route }) => {
         }
     
         // Call function to save or process the updated data (e.g., send to an API)
-        saveDetails(updatedData.complextiles);
+        setAllFoodData(updatedData.complextiles);
+        // saveDetailsFood(updatedData.complextiles);
     };
     
 
@@ -162,6 +167,8 @@ const FoodDetails = ({ route }) => {
         if (!item) {
             return null; // Handle the case where item is undefined/null
         }
+
+        console.log("test", foodsToEat)
         
         return (
             <TouchableOpacity

@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput, } from 'react-native';
 import VideoPopup from '../login/components/VideoPopup';
-import { saveDetails } from '../../store/Details';
+import { saveDetailsExcerice } from '../../store/Details';
 import Modal from 'react-native-modal';
+import { useAuth } from '../../store/AuthContext';
 
 const ExerciseDetails = ({ route }) => {
   const { role } = route.params;
   const { data } = route.params;
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [exercises, setExercises] = useState([]);
+  const { setAllFoodData, setAllExcerciseData} = useAuth();
 
   useEffect(() => {
     if (data && data.complextiles && data.complextiles.length > 0) {
@@ -129,7 +131,8 @@ const ExerciseDetails = ({ route }) => {
         updatedData.complextiles.push(updatedExerciseTiles);
     }
 
-    saveDetails(updatedData.complextiles);
+    // saveDetailsExcerice(updatedData.complextiles);
+    setAllExcerciseData(updatedData.complextiles);
   };
 
 
