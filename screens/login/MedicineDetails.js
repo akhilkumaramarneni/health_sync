@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
-const yoga = require('../../assets/images/medicineDetail.png');
+const yoga = require('../../assets/images/medicine.png');
 import { useNavigation } from '@react-navigation/native';
 import { saveDetailsMedicine } from '../../store/Details';
 import Modal from 'react-native-modal';
