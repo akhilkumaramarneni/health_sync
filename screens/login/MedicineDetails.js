@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
-const yoga = require('../../assets/images/yoga.png');
+const yoga = require('../../assets/images/medicineDetail.png');
+import { useNavigation } from '@react-navigation/native';
 import { saveDetails } from '../../store/Details';
 import Modal from 'react-native-modal';
 
@@ -10,6 +11,8 @@ const MedicineDetails = ({ route }) => {
     const [medicines, setMedicines] = useState([]);
     const [isSuccessModalVisible, setIsSuccessModalVisible] = useState(false);
 
+    const navigation = useNavigation();
+
     useEffect(() => {
         if (data && data.complextiles && data.complextiles.length > 0) {
         const medicineTiles = data.complextiles.find(tile => tile.type === 'medicine');
@@ -18,9 +21,9 @@ const MedicineDetails = ({ route }) => {
             const parsedMedicines = medicineTiles.todo.map(medicine => ({
             id: Math.random().toString(36).substring(7),
             name: medicine.type,
-            description: medicine.description,
+            // description: medicine.description,
             dosage: medicine.description, // Assuming description in JSON is dosage in code
-            image: require('../../assets/images/yoga.png'), // You can replace this with actual images
+            image: yoga, // You can replace this with actual images
             }));
             setMedicines(parsedMedicines);
         }
@@ -46,7 +49,7 @@ const MedicineDetails = ({ route }) => {
           <Image source={item.image} style={styles.medicineImage} />
           <View style={styles.textContainer}>
             <Text style={styles.medicineName}>{item.name}</Text>
-            <Text style={styles.medicineDescription}>{item.description}</Text>
+            {/* <Text style={styles.medicineDescription}>{item.description}</Text> */}
             <Text style={styles.medicineDosage}>{item.dosage}</Text>
           </View>
           {role === 'doctor' && (
@@ -87,7 +90,7 @@ const MedicineDetails = ({ route }) => {
             type: 'medicine',
             todo: medicines.map((medicine) => ({
                 type: medicine.name, // Assuming 'name' is equivalent to 'type' in JSON
-                description: medicine.description,
+                description: medicine.dosage,
             })),
         };
     
@@ -120,28 +123,33 @@ const MedicineDetails = ({ route }) => {
         setTimeout(() => {
             setIsSuccessModalVisible(false);
         }, 800);
+
+        // navigation.navigate('New Session');
     };
   
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 {role === 'doctor' && (
                 <View style={styles.formContainer}>
                     <TextInput
                     style={styles.input}
                     placeholder="Medicine Name"
+                    placeholderTextColor="#ffffff"
                     value={newMedicineName}
                     onChangeText={setNewMedicineName}
                     />
-                    <TextInput
+                    {/* <TextInput
                     style={styles.input}
                     placeholder="Medicine Description"
+                    placeholderTextColor="#ffffff"
                     value={newMedicineDescription}
                     onChangeText={setNewMedicineDescription}
-                    />
+                    /> */}
                     <TextInput
                     style={styles.input}
                     placeholder="Dosage"
+                    placeholderTextColor="#ffffff"
                     value={newMedicineDosage}
                     onChangeText={setNewMedicineDosage}
                     />
@@ -186,7 +194,7 @@ const MedicineDetails = ({ route }) => {
       marginBottom: 20,
       padding: 10,
       borderRadius: 10,
-      backgroundColor: '#F8DCE1',
+      backgroundColor: '#3498db',
     },
     input: {
       marginBottom: 10,
@@ -198,7 +206,7 @@ const MedicineDetails = ({ route }) => {
     medicineCard: {
       marginBottom: 15,
       borderRadius: 10,
-      backgroundColor: '#F8DCE1',
+      backgroundColor: '#3498db',
       flexDirection: 'row',
       alignItems: 'center',
       padding: 10,
@@ -207,16 +215,17 @@ const MedicineDetails = ({ route }) => {
       flex: 1,
     },
     medicineName: {
-      fontSize: 16,
+      fontSize: 20,
       fontWeight: 'bold',
-      color: '#333333',
+      color: '#fff',
     },
     medicineDescription: {
-      color: '#666666',
+      color: '#fff',
       marginTop: 2,
+      fontSize: 17,
     },
     medicineDosage: {
-      color: '#666666',
+      color: '#fff',
       fontWeight: 'bold',
       marginTop: 3,
     },
@@ -224,7 +233,7 @@ const MedicineDetails = ({ route }) => {
       marginTop: 10,
       padding: 10,
       borderRadius: 10,
-      backgroundColor: '#007AFF',
+      backgroundColor: '#32a85f',
       alignItems: 'center',
     },
     addButtonText: {
@@ -251,7 +260,7 @@ const MedicineDetails = ({ route }) => {
         position: 'absolute',
         bottom: 20,
         alignSelf: 'center',
-        backgroundColor: '#007AFF',
+        backgroundColor: '#32a85f',
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 8,
@@ -260,7 +269,7 @@ const MedicineDetails = ({ route }) => {
         position: 'absolute',
         bottom: 20,
         alignSelf: 'center',
-        backgroundColor: '#007AFF',
+        backgroundColor: '#32a85f',
         paddingVertical: 12,
         paddingHorizontal: 30,
         borderRadius: 8,
@@ -271,14 +280,14 @@ const MedicineDetails = ({ route }) => {
         fontSize: 16,
     },
     successMessage: {
-        position: 'absolute',
-        bottom: 100, // Adjust this value as needed
-        width: '100%',
+        marginTop: 15,
+        padding: 15,
+        borderRadius: 15,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 128, 0, 0.7)',
-        paddingVertical: 8,
-        borderRadius: 8,
+        backgroundColor: 'rgba(0, 128, 0, 0.7)', // Adjust the color here (black with some opacity)
+        paddingVertical: 10,
+        marginBottom: 100, // Adjust this value to position the modal above the button
     },
     successText: {
         color: '#ffffff',

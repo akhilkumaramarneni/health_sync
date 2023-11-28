@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
-const yoga = require('../../assets/images/yoga.png');
+const yoga = require('../../assets/images/foodDetail.png');
 import { saveDetails } from '../../store/Details';
 import Modal from 'react-native-modal';
 
@@ -210,18 +210,21 @@ const FoodDetails = ({ route }) => {
             <TextInput
               style={styles.input}
               placeholder="Enter food type"
+              placeholderTextColor="#ffffff"
               value={newFoodName}
               onChangeText={setNewFoodName}
             />
             <TextInput
               style={styles.input}
               placeholder="Enter food description"
+              placeholderTextColor="#ffffff"
               value={newFoodDescription}
               onChangeText={setNewFoodDescription}
             />
             <TextInput
               style={styles.input}
               placeholder="Enter food examples"
+              placeholderTextColor="#ffffff"
               value={newFoodExamples}
               onChangeText={setNewFoodExamples}
             />
@@ -239,7 +242,7 @@ const FoodDetails = ({ route }) => {
             </TouchableOpacity>
             {role === 'doctor' && (
                 <TouchableOpacity
-                style={[styles.editButton, { backgroundColor: '#007AFF' }]}
+                style={[styles.editButton, { backgroundColor: '#000000' }]}
                 onPress={submitDetails}
                 >
                 <Text style={styles.editButtonText}>Submit Details</Text>
@@ -281,14 +284,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     marginTop: 20,
-    color: '#007AFF',
+    // color: '#007AFF',
     textAlign: 'center',
   },
   foodCard: {
     width: 150,
     height: 200,
     borderRadius: 10,
-    backgroundColor: '#F8DCE1',
+    backgroundColor: '#3498db',
     marginHorizontal: 2,
     justifyContent: 'center',
     alignItems: 'center',
@@ -304,15 +307,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 18,
-    color: '#333333',
+    color: '#fff',
   },
   foodDescription: {
     textAlign: 'center',
-    color: '#666666',
+    color: '#fff',
   },
   foodExamples: {
     textAlign: 'center',
-    color: '#666666',
+    color: '#fff',
   },
   imageContainer: {
     alignItems: 'center',
@@ -334,24 +337,25 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     borderWidth: 1,
-    fontWeight: 'bold',
     borderColor: '#CCCCCC',
+    height: 40,
+    width: '100%',
   },
   formContainer: {
     marginBottom: 10,
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#F8DCE1',
+    backgroundColor: '#3498db',
   },
   editButtonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
   },
   editButton: {
-    marginBottom: 0.1,
-    padding: 4,
+    marginBottom: 10,
     borderRadius: 10,
-    backgroundColor: '#007AFF',
+    padding: 10,
+    backgroundColor: '#32a85f',
     alignItems: 'center',
   },
   addButtonText: {
@@ -386,6 +390,13 @@ successText: {
     justifyContent: 'center',
     margin: 0,
 },
+submitButtonContainer: {
+    position: 'absolute',
+    bottom: 2,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
 });
 
 export default FoodDetails;

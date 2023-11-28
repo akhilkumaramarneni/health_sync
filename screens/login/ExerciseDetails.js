@@ -79,7 +79,7 @@ const ExerciseDetails = ({ route }) => {
     return (
       <TouchableOpacity style={styles.exerciseCard}>
        {/* Display exercise information */}
-       <Image source={require('../../assets/images/yoga.png')} style={styles.exerciseImage} />
+       <Image source={require('../../assets/images/exerciseDetail.png')} style={styles.exerciseImage} />
        <Text style={styles.exerciseName}>{item.name}</Text>
        <Text style={styles.exerciseDescription}>{item.description}</Text>
        {/* <Text style={styles.exerciseDuration}>{item.duration}</Text> */}
@@ -141,12 +141,14 @@ const ExerciseDetails = ({ route }) => {
             <TextInput
               style={styles.input}
               placeholder="Exercise Name"
+              placeholderTextColor="#ffffff"
               value={exerciseName}
               onChangeText={(text) => setExerciseName(text)}
             />
             <TextInput
               style={styles.input}
               placeholder="Exercise Description"
+              placeholderTextColor="#ffffff"
               value={exerciseDesc}
               onChangeText={(text) => setExerciseDesc(text)}
             />
@@ -209,14 +211,13 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 5,
     borderRadius: 10,
-    backgroundColor: '#F8DCE1',
+    backgroundColor: '#3498db',
   },
   input: {
     marginBottom: 10,
     padding: 10,
     borderRadius: 5,
     borderWidth: 1,
-    fontWeight: 'bold',
     borderColor: '#CCCCCC',
   },
   heading: {
@@ -230,7 +231,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#F8DCE1',
+    backgroundColor: '#3498db',
   },
   exerciseImage: {
     width: '100%',
@@ -241,13 +242,13 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333333',
+    color: '#fff',
   },
   exerciseDescription: {
-    color: '#666666',
+    color: '#fff',
   },
   exerciseDuration: {
-    color: '#666666',
+    color: '#fff',
     marginBottom: 5,
   },
   playButton: {
@@ -257,9 +258,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#F8DCE1',
+    backgroundColor: '#3498db',
     justifyContent: 'center',
     alignItems: 'center',
+    color: "#fff"
   },
   playButtonText: {
     color: '#36013F',
@@ -270,11 +272,11 @@ const styles = StyleSheet.create({
     marginBottom: 0.1,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#32a85f',
     alignItems: 'center',
   },
   addButtonText: {
-    color: '#FFFFFF',
+    color: '#fff',
     fontWeight: 'bold',
   },
   deleteButton: {
@@ -293,7 +295,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     alignSelf: 'center',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#32a85f',
     paddingVertical: 12,
     paddingHorizontal: 30,
     borderRadius: 8,
@@ -304,14 +306,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   successMessage: {
-    position: 'absolute',
-    bottom: 100, // Adjust this value as needed
-    width: '100%',
+    marginTop: 15,
+    padding: 15,
+    borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 128, 0, 0.7)',
-    paddingVertical: 8,
-    borderRadius: 8,
+    backgroundColor: 'rgba(0, 128, 0, 0.7)', // Adjust the color here (black with some opacity)
+    paddingVertical: 10,
+    marginBottom: 100, // Adjust this value to position the modal above the button
   },
   successText: {
     color: '#ffffff',
